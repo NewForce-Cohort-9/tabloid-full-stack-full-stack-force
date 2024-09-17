@@ -36,11 +36,11 @@ export const CategoryForm = () => {
             ></input>
           </fieldset>
           <fieldset>
-            <Button onClick={handleSave}>Create</Button>
+            <a class="btn btn-outline-primary mx-1 text-primary" title="Edit" onClick={handleSave}>Create</a>
           </fieldset>
           <fieldset>
             <Link to={"/categories"}>
-              <Button>Cancel</Button>
+              <a class="btn btn-outline-primary mx-1 text-primary" title="Edit">Cancel</a>
             </Link>
           </fieldset>
         </label>

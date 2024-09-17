@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Hello from "./Hello";
 import { Category } from "./Category/CategoryList";
 import { CategoryForm } from "./Category/CategoryForm";
+import TagList from "./Tags/TagList";
 
 export default function ApplicationViews() {
   return (
