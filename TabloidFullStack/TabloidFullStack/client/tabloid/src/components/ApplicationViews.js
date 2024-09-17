@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Hello from "./Hello";
 import { Category } from "./Category/CategoryList";
 import TagList from "./Tags/TagList";
-import { PostList } from "./Post/PostList";
+import  PostList  from "./Post/PostList";
 
 export default function ApplicationViews() {
   return (
