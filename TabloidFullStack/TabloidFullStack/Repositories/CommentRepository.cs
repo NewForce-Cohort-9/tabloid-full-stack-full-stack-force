@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using NuGet.Protocol.Plugins;
+//using NuGet.Protocol.Plugins;
 using TabloidFullStack.Models;
 using TabloidFullStack.Repositories;
 using TabloidFullStack.Models;
