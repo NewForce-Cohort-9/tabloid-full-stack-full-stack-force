@@ -28,7 +28,7 @@ export default function TagList() {
 
       <div class="container pt-5">
         <div className="container d-flex align-items-center justify-content-between w-full">
-          <h1>All Tags</h1>
+          <h1 className="p-4">All Tags</h1>
           <a class="btn btn-outline-primary mx-1 text-primary" title="Edit">
             Create New Tag
           </a>
