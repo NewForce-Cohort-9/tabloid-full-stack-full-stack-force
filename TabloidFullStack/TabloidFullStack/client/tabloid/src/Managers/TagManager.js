@@ -5,3 +5,12 @@ export const getAllTags = async () => {
   const response = await fetch(tagBase);
   if (response.ok) return await response.json();
 };
+
+export const addTag = async (tag) => {
+  const response = await fetch(tagBase, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(tag),
+  });
+  return await response.json();
+};
