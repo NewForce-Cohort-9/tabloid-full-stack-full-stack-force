@@ -27,9 +27,16 @@ export default function TagAdd() {
 
             <button
               type="submit"
-              className="btn mt-4 btn-outline-primary mx-1 text-primary w-100"
+              className="btn mt-4 btn-primary mx-1 text-white w-100"
             >
               Save
+            </button>
+            <button
+              onClick={() => navigate("/tags")}
+              type="submit"
+              className="btn mt-4 btn-outline-primary mx-1 text-primary w-100"
+            >
+              Cancel
             </button>
           </form>
         </div>

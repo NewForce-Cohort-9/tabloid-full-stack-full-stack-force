@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using TabloidFullStack.Models;
+using TabloidFullStack.Utils;
 namespace TabloidFullStack.Repositories
 {
     public class CategoryRepository : BaseRepository, ICategoryRepository
@@ -30,6 +31,23 @@ namespace TabloidFullStack.Repositories
                     reader.Close();
 
                     return categories;
+                }
+            }
+        }
+        public void AddCategory(Category category)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO Category (Name) OUTPUT INSERTED.ID VALUES (@name)";
+
+                    DbUtils.AddParameter(cmd, "@name", category.Name);
+
+                    int id = (int)cmd.ExecuteScalar();
+
+                    category.Id = id;
                 }
             }
         }

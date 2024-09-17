@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TabloidFullStack.Models;
 using TabloidFullStack.Repositories;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -31,8 +32,10 @@ namespace TabloidFullStack.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
-        public void Post([FromBody] string value)
-        {
+        public IActionResult Post(Category category)
+        { 
+            _categoryRepository.AddCategory(category);
+            return CreatedAtAction("Get", new {id = category.Id}, category);
         }
 
         // PUT api/<CategoryController>/5
