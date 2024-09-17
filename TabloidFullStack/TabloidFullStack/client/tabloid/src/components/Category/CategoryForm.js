@@ -27,6 +27,7 @@ export const CategoryForm = () => {
             <br></br>
             <input
               type="text"
+              required
               placeholder="Category"
               onChange={(event) => {
                 const categoryCopy = { ...category };
@@ -36,15 +37,21 @@ export const CategoryForm = () => {
             ></input>
           </fieldset>
           <fieldset>
-            <a class="btn btn-outline-primary mx-1 text-primary" title="Edit" onClick={handleSave}>Create</a>
-          </fieldset>
-          <fieldset>
-            <Link to={"/categories"}>
-              <a class="btn btn-outline-primary mx-1 text-primary" title="Edit">Cancel</a>
-            </Link>
+            <a
+              class="btn btn-outline-primary mx-1 text-primary"
+              title="Edit"
+              onClick={handleSave}
+            >
+              Create
+            </a>
           </fieldset>
         </label>
       </form>
+      <Link to={"/categories"}>
+        <a class="btn btn-outline-primary mx-1 text-primary" title="Edit">
+          Cancel
+        </a>
+      </Link>
     </div>
   );
 };
