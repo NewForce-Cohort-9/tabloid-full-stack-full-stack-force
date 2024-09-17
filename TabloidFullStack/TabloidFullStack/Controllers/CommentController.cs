@@ -12,14 +12,14 @@ namespace TabloidFullStack.Controllers
     {
         private readonly ICommentRepository _commentRepository;
         private readonly IPostRepository _postRepository;
-        private readonly IUserProfileRepository _userProfileRepository;
+        private readonly IUserRepository _userRepository;
 
 
-        public CommentController(ICommentRepository commentRepository, IPostRepository postRepository, IUserProfileRepository userProfileRepository)
+        public CommentController(ICommentRepository commentRepository, IPostRepository postRepository, IUserRepository userRepository)
         {
             _commentRepository = commentRepository;
             _postRepository = postRepository;
-            _userProfileRepository = userProfileRepository;
+            _userRepository = userRepository;
         }
 
         // GET: CommentController
