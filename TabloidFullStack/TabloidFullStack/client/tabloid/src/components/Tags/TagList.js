@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { getAllTags } from "../../Managers/TagManager";
 import Tag from "./Tag";
+import TagPageHeader from "./TagPageHeader";
 
 export default function TagList() {
   const [tags, setTags] = useState([]);
@@ -16,24 +18,20 @@ export default function TagList() {
 
   return (
     <>
-      <header class="masthead bg-primary text-white text-center">
-        <div class="container d-flex align-items-center flex-column">
-          <div class="divider-custom divider-light">
-            <div class="divider-custom-line"></div>
-            <div class="divider-custom-line"></div>
-          </div>
-          <h2 class="pre-wrap font-weight-light mb-0">Tags</h2>
-        </div>
-      </header>
+      <TagPageHeader title="Tags" />
 
-      <div class="container pt-5">
-        <div className="container d-flex align-items-center justify-content-between w-full">
+      <div className="container pt-5">
+        <div className="container d-flex align-items-center justify-content-between w-100">
           <h1 className="p-4">All Tags</h1>
-          <a class="btn btn-outline-primary mx-1 text-primary" title="Edit">
+          <Link
+            to="/tags/add"
+            className="btn btn-outline-primary mx-1 text-primary"
+            title="Edit"
+          >
             Create New Tag
-          </a>
+          </Link>
         </div>
-        <table class="table table-striped">
+        <table className="table table-striped">
           <thead>
             <tr>
               <th>Id</th>
