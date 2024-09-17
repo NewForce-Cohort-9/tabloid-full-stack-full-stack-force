@@ -9,13 +9,12 @@ namespace TabloidFullStack.Controllers
     {
         private readonly IPostRepository _postRepository;
 
-        // Constructor to inject the repository
+   
         public PostController(IPostRepository postRepository)
         {
             _postRepository = postRepository;
         }
 
-        // HTTP GET method to get approved posts
         [HttpGet]
         public IActionResult GetApprovedPosts()
         {
