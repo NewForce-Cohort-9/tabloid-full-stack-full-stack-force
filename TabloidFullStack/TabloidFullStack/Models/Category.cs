@@ -1,4 +1,10 @@
-﻿namespace TabloidFullStack.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
+using TabloidFullStack.Models;
+
+
+
+namespace TabloidFullStack.Models
 {
     public class Category
     {
