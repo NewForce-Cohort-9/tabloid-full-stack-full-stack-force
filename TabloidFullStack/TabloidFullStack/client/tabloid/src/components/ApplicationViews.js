@@ -1,36 +1,26 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
-import Hello from "./Hello";
-import { Category } from "./Category/CategoryList";
-import { CategoryForm } from "./Category/CategoryForm";
-import TagList from "./Tags/TagList";
-import PostList from "./Post/PostList";
-import { CommentList } from "./Comments/CommentList";
-import TagForm from "./Tags/TagForm";
-import TagDelete from "./Tags/TagDelete";
-import { CategoryDelete } from "./Category/CategoryDelete";
-import MyPosts from "./Post/MyPosts";
-import { EditCategory } from "./Category/CategoryEdit";
-import PostDetail from "./Post/PostDetail";
-import UserProfileList from "./UserProfiles/UserProfileList";
+import React, { useEffect, useState } from "react";
+import AdminViews from "./AdminViews";
+import { UserView } from "./UserView";
 
 export default function ApplicationViews() {
-  return (
-    <Routes>
-      <Route path="/" element={<Hello />} />
-      <Route index path="categories" element={<Category />} />
-      <Route path="/tags" element={<TagList />} />
-      <Route path="/posts" element={<PostList />} />
-      <Route path="/posts/:postId/comments" element={<CommentList />} />
-      <Route path="/tags/add" element={<TagForm />} />
-      <Route path="/tags/delete/:id" element={<TagDelete />} />
-      <Route path="/tags/edit/:id" element={<TagForm />} />
-      <Route path="/myposts" element={<MyPosts />} />
-      <Route path="/posts/:id" element={<PostDetail />} />
-      <Route path="categories/create" element={<CategoryForm />} />
-      <Route path="categories/delete/:id" element={<CategoryDelete />} />
-      <Route path="categories/edit/:id" element={<EditCategory />} />
-      <Route path="/profiles" element={<UserProfileList />} />
-    </Routes>
-  );
+  const [currentUser, setCurrentUser] = useState({})
+  useEffect(() => {
+    const localUser = localStorage.getItem("userProfile")
+    const userObj = JSON.parse(localUser)
+
+    setCurrentUser(userObj)
+  }, [])
+
+  if(currentUser.userTypeId === 1)
+  {
+    return (
+      <AdminViews currentUser={currentUser}/>
+    )
+  }
+  else 
+  {
+    return (
+      <UserView currentUser={currentUser} />
+    )
+  }
 }
