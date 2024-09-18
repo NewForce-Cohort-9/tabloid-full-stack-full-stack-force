@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useInRouterContext, useNavigate } from "react-router-dom";
-import { Button } from "reactstrap";
+import { Button, Input } from "reactstrap";
 import { addCategory } from "../../Managers/CategoryManager";
+import TagPageHeader from "../Tags/TagPageHeader";
 
 export const CategoryForm = () => {
   const [category, setCategory] = useState({});
@@ -19,39 +20,35 @@ export const CategoryForm = () => {
   };
 
   return (
-    <div>
-      <form>
-        <label>
-          <fieldset>
-            <label>New Category Name:</label>
-            <br></br>
-            <input
-              type="text"
-              required
-              placeholder="Category"
+    <>
+      <TagPageHeader title="Create new tag" />
+      <div className="container pt-5">
+        <div className="container d-flex align-items-center justify-content-center flex-column">
+          <form>
+            <h1 className="p-4">Enter a new category name</h1>
+            <Input
               onChange={(event) => {
                 const categoryCopy = { ...category };
                 categoryCopy.Name = event.target.value;
                 setCategory(categoryCopy);
               }}
-            ></input>
-          </fieldset>
-          <fieldset>
-            <a
-              class="btn btn-outline-primary mx-1 text-primary"
-              title="Edit"
+            />
+
+            <button
+              type="submit"
+              className="btn mt-4 btn-primary mx-1 text-white w-100"
               onClick={handleSave}
             >
-              Create
-            </a>
-          </fieldset>
-        </label>
-      </form>
-      <Link to={"/categories"}>
-        <a class="btn btn-outline-primary mx-1 text-primary" title="Edit">
-          Cancel
-        </a>
-      </Link>
-    </div>
+              Save
+            </button>
+            <Link to={"/categories"}>
+              <a className="btn mt-4 btn-outline-primary mx-1 text-primary w-100">
+                Cancel
+              </a>
+            </Link>
+          </form>
+        </div>
+      </div>
+    </>
   );
 };

@@ -34,6 +34,38 @@ namespace TabloidFullStack.Repositories
                 }
             }
         }
+        public Category GetById(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                {
+                    conn.Open();
+
+                    using (SqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"SELECT Name, Id FROM Category WHERE Id = @id";
+
+                        DbUtils.AddParameter(cmd, "@id", id);
+
+                        SqlDataReader reader = cmd.ExecuteReader();
+
+                        if (reader.Read())
+                        {
+                            Category category = new Category
+                            {
+                                Id = id,
+                                Name = DbUtils.GetString(reader, "Name")
+                            };
+                            reader.Close();
+                            return category;
+
+                        }
+                        reader.Close();
+                        return null;
+                    }
+                }
+            }
+        }
         public void AddCategory(Category category)
         {
             using (SqlConnection conn = Connection)
@@ -48,6 +80,21 @@ namespace TabloidFullStack.Repositories
                     int id = (int)cmd.ExecuteScalar();
 
                     category.Id = id;
+                }
+            }
+        }
+
+        public void DeleteCategory(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"DELETE FROM Category WHERE Id = @id";
+
+                   DbUtils.AddParameter(cmd, "@id", id);
+                   cmd.ExecuteNonQuery();
                 }
             }
         }

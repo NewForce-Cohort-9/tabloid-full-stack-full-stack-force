@@ -44,9 +44,12 @@ export const Category = () => {
                 <tr>
                   <td>{category.name}</td>
                   <td>
+                    <Link to={`delete/${category.id}`}>
                     <a class="btn btn-outline-danger mx-1" title="View">
                       <TrashcanDelete color="#b91c1c" size={20} />
                     </a>
+                    
+                    </Link>
                   </td>
                 </tr>
               );
