@@ -8,9 +8,13 @@ export default function Tag({ tag }) {
       <td>{tag.id}</td>
       <td>{tag.name}</td>
       <td>
-        <a className="btn btn-outline-primary mx-1 text-primary" title="Edit">
+        <Link
+          to={`/tags/edit/${tag.id}`}
+          className="btn btn-outline-primary mx-1 text-primary"
+          title="Edit"
+        >
           <EditPencil size={20} />
-        </a>
+        </Link>
         <Link
           to={`/tags/delete/${tag.id}`}
           className="btn btn-outline-danger mx-1"
