@@ -16,6 +16,7 @@ import { CommentForm } from "./Comments/CommentForm";
 import { DeleteComment } from "./Comments/DeleteComment";
 import PostForm from "./Post/PostForm";
 import UserProfileList from "./UserProfiles/UserProfileList";
+import UserProfile from "./UserProfiles/UserProfile";
 import Header from "./Header";
 
 export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
@@ -63,6 +64,7 @@ export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
         />
 
         <Route path="/profiles" element={<UserProfileList />} />
+        <Route path="/profile/:id" element={<UserProfile />} />
       </Route>
     </Routes>
   );
