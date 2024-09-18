@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes } from "react-router-dom";
 import Hello from "./Hello";
 import { Category } from "./Category/CategoryList";
 import { CategoryForm } from "./Category/CategoryForm";
@@ -15,10 +15,18 @@ import PostDetail from "./Post/PostDetail";
 import UserProfileList from "./UserProfiles/UserProfileList";
 import Header from "./Header";
 
-export default function AdminViews() {
+export default function AdminViews(isLoggedIn, setIsLoggedIn) {
   return (
     <Routes>
-        <Header/>
+        <Route
+        path="/"
+        element={
+            <>
+            <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+            <Outlet />
+            </>
+        }
+        >
       <Route path="/" element={<Hello />} />
       <Route index path="categories" element={<Category />} />
       <Route path="/tags" element={<TagList />} />
@@ -33,6 +41,7 @@ export default function AdminViews() {
       <Route path="categories/delete/:id" element={<CategoryDelete />} />
       <Route path="categories/edit/:id" element={<EditCategory />} />
       <Route path="/profiles" element={<UserProfileList />} />
+      </Route>
     </Routes>
   );
 }

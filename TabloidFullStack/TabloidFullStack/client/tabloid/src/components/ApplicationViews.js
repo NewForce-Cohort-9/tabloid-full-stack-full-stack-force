@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import AdminViews from "./AdminViews";
 import { UserView } from "./UserView";
 
-export default function ApplicationViews() {
+export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
   const [currentUser, setCurrentUser] = useState({})
   useEffect(() => {
     const localUser = localStorage.getItem("userProfile")
@@ -11,16 +11,16 @@ export default function ApplicationViews() {
     setCurrentUser(userObj)
   }, [])
 
-  if(currentUser.userTypeId === 1)
+  if(currentUser.userTypeId = 1)
   {
     return (
-      <AdminViews currentUser={currentUser}/>
+      <AdminViews currentUser={currentUser} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
     )
   }
   else 
   {
     return (
-      <UserView currentUser={currentUser} />
+      <UserView currentUser={currentUser} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
     )
   }
 }

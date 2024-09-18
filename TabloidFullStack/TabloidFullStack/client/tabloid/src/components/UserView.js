@@ -8,14 +8,14 @@ import PostDetail from "./Post/PostDetail";
 import UserProfileList from "./UserProfiles/UserProfileList";
 import Header from "./Header";
 
-export const UserView = () => {
+export const UserView = (isLoggedIn, setIsLoggedIn) => {
   return (
     <Routes>
         <Route
         path="/"
         element={
             <>
-            <Header />
+            <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
             <Outlet />
             </>
         }
