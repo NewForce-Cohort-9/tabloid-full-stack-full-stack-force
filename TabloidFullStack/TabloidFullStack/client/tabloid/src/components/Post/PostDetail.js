@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { getPostById } from "../../Managers/PostManager";
 
 export default function PostDetail() {
@@ -21,6 +21,12 @@ export default function PostDetail() {
             <p>{post.content}</p>
             <p><strong>Published on:</strong> {new Date(post.publishDateTime).toLocaleDateString()}</p>
             <p><strong>Author:</strong> {post.author.displayName}</p>
+
+             {/* Link to the comment list page */}
+             <Link to={`/posts/${id}/comments`} className="btn btn-outline-primary mx-1" title="View Comments">
+               View Comments
+            </Link>
         </div>
+
     );
 }
