@@ -13,10 +13,12 @@ import MyPosts from "./Post/MyPosts";
 import { EditCategory } from "./Category/CategoryEdit";
 import PostDetail from "./Post/PostDetail";
 import UserProfileList from "./UserProfiles/UserProfileList";
+import Header from "./Header";
 
 export default function AdminViews() {
   return (
     <Routes>
+        <Header/>
       <Route path="/" element={<Hello />} />
       <Route index path="categories" element={<Category />} />
       <Route path="/tags" element={<TagList />} />
