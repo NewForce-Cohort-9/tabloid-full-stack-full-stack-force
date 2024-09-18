@@ -1,32 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { getPostById } from "../../Managers/PostManager";
+import { useParams, useNavigate } from "react-router-dom";
+import { getPostById, deletePost } from "../../Managers/PostManager"; 
 
-export default function PostDetail() {
-    const { id } = useParams(); // This is a hook that allows us to extract the id from the URL
-    const [post, setPost] = useState(null);
+export default function PostDetails() {
+  const { id } = useParams();
+  const [post, setPost] = useState(null);
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        getPostById(id).then(data => setPost(data));
-    }, [id]);
+  useEffect(() => {
+    getPostById(id).then((data) => setPost(data));
+  }, [id]);
 
-    if (!post) {
-        return <div>Loading...</div>;
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      deletePost(id).then(() => {
+        alert("Post deleted successfully.");
+        navigate("/posts"); 
+      });
     }
+  };
 
-    return (
-        <div>
-            <h1>{post.title}</h1>
-            {post.imageLocation && <img src={post.imageLocation} alt="Header" />}
-            <p>{post.content}</p>
-            <p><strong>Published on:</strong> {new Date(post.publishDateTime).toLocaleDateString()}</p>
-            <p><strong>Author:</strong> {post.author.displayName}</p>
+  if (!post) {
+    return <div>Loading...</div>;
+  }
 
-             {/* Link to the comment list page */}
-             <Link to={`/posts/${id}/comments`} className="btn btn-outline-primary mx-1" title="View Comments">
-               View Comments
-            </Link>
-        </div>
+  return (
+    <div className="container">
+      <h1>{post.title}</h1>
+      <p>{post.content}</p>
+      <p>Published on: {new Date(post.publishDateTime).toLocaleDateString()}</p>
+      <p>Author: {post.author.displayName}</p>
 
-    );
+      
+      <button className="btn btn-secondary" onClick={() => navigate("/posts")}>
+        Back to posts
+      </button>
+    </div>
+  );
 }

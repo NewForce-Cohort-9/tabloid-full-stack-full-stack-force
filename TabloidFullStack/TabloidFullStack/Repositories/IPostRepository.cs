@@ -10,5 +10,7 @@ namespace TabloidFullStack.Repositories
         Post GetPostById(int categoryId);
 
         void AddPost(Post post);
+
+        void DeletePost(int postId);
     }
 }
