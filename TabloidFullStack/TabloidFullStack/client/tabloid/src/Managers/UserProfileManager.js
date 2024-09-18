@@ -1,4 +1,5 @@
 const apiUrl = "https://localhost:5001";
+const profileBase = `${apiUrl}/api/UserProfile`;
 
 // Update login function to include error handling
 export const login = (userObject) => {
@@ -43,6 +44,11 @@ export const register = (userObject, password) => {
 };
 
 // UserProfileContext provider setup remains the same
+export const getAllProfiles = async () => {
+  const response = await fetch(profileBase);
+  return await response.json();
+};
+
 // return (
 //   <UserProfileContext.Provider value={{ isLoggedIn, login, logout, register }}>
 //      {props.children}
