@@ -1,4 +1,5 @@
 const apiUrl = "https://localhost:5001";
+const profileBase = `${apiUrl}/api/UserProfile`;
 
 export const login = (userObject) => {
   return fetch(`${apiUrl}/api/userprofile/getbyemail?email=${userObject.email}`)
@@ -29,6 +30,11 @@ export const register = (userObject, password) => {
     .then((savedUserProfile) => {
       localStorage.setItem("userProfile", JSON.stringify(savedUserProfile));
     });
+};
+
+export const getAllProfiles = async () => {
+  const response = await fetch(profileBase);
+  return await response.json();
 };
 
 // return (
