@@ -7,6 +7,53 @@ namespace TabloidFullStack.Repositories
     {
         public UserRepository(IConfiguration configuration) : base(configuration) { }
 
+        public List<UserProfile> GetAll()
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand()) {
+
+                    cmd.CommandText = @"
+                        SELECT 
+                            up.Id, up.DisplayName, up.FirstName, up.LastName,
+	                        up.Email, up.CreateDateTime, up.ImageLocation,up.UserTypeId,
+                            ut.Name AS UserTypeName 
+                        FROM UserProfile up
+                        JOIN UserType ut ON up.UserTypeId = ut.Id
+                        ORDER BY DisplayName";
+
+                    var reader = cmd.ExecuteReader();
+
+                    List<UserProfile> profiles = []; 
+
+                    while (reader.Read())
+                    {
+
+                        profiles.Add(new UserProfile()
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            DisplayName = reader.GetString(reader.GetOrdinal("DisplayName")),
+                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                            Email = reader.GetString(reader.GetOrdinal("Email")),
+                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                            ImageLocation = reader.GetString(reader.GetOrdinal("ImageLocation")),
+                            UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
+                            UserType = new UserType()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
+                                Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
+                            }
+                        });
+                    }
+                    reader.Close();
+                    return profiles;
+                 }
+                
+             }
+        }
+
         public UserProfile GetByEmail(string email)
         {
             using (var conn = Connection)

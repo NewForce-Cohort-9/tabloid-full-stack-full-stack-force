@@ -41,22 +41,33 @@ export default function Header({ isLoggedIn, setIsLoggedIn }) {
             )}
           </Nav>
           <Nav className="mr-auto" navbar>
-            {isLoggedIn &&
+            {isLoggedIn && (
               <>
                 <NavItem>
-                  <NavLink tag={RRNavLink} to="/categories">Category Management</NavLink>
-                </NavItem>
-                <NavItem>  
-                  <NavLink tag={RRNavLink} to="/posts">Posts</NavLink>
+                  <NavLink tag={RRNavLink} to="/categories">
+                    Category Management
+                  </NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink tag={RRNavLink} to="/myposts">My Posts</NavLink>
+                  <NavLink tag={RRNavLink} to="/posts">
+                    Posts
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink tag={RRNavLink} to="/myposts">
+                    My Posts
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink tag={RRNavLink} to="/profiles">
+                    User Profiles
+                  </NavLink>
                 </NavItem>
                 <NavItem>
                 <NavLink tag={RRNavLink} to="/posts/create">New Post</NavLink>
                 </NavItem>
               </>
-            }
+            )}
           </Nav>
           <Nav navbar>
             {isLoggedIn && (
