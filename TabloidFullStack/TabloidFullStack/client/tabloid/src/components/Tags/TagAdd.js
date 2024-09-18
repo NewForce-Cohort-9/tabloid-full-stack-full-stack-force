@@ -33,7 +33,7 @@ export default function TagAdd() {
             </button>
             <button
               onClick={() => navigate("/tags")}
-              type="submit"
+              type="button"
               className="btn mt-4 btn-outline-primary mx-1 text-primary w-100"
             >
               Cancel
