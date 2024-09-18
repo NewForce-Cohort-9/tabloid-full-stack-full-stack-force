@@ -153,6 +153,30 @@ namespace TabloidFullStack.Repositories
             }
         }
 
+        public void AddPost(Post post)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO Post (Title, Content, CreateDateTime, PublishDateTime, IsApproved, CategoryId, UserProfileId)
+                        OUTPUT INSERTED.ID
+                        VALUES (@Title, @Content, @CreateDateTime, @PublishDateTime, @IsApproved, @CategoryId, @UserProfileId)";
+
+                    cmd.Parameters.AddWithValue("@Title", post.Title);
+                    cmd.Parameters.AddWithValue("@Content", post.Content);
+                    cmd.Parameters.AddWithValue("@CreateDateTime", post.CreateDateTime);
+                    cmd.Parameters.AddWithValue("@PublishDateTime", post.PublishDateTime ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@IsApproved", post.IsApproved);
+                    cmd.Parameters.AddWithValue("@CategoryId", post.CategoryId);
+                    cmd.Parameters.AddWithValue("@UserProfileId", post.UserProfileId);
+
+                    post.Id = (int)cmd.ExecuteScalar();
+                }
+            }
+        }
 
 
     }

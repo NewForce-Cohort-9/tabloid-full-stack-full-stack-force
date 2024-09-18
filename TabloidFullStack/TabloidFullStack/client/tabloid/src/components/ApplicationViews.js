@@ -13,6 +13,7 @@ import { CategoryDelete } from "./Category/CategoryDelete";
 import MyPosts from "./Post/MyPosts";
 import { EditCategory } from "./Category/CategoryEdit";
 import PostDetail from "./Post/PostDetail";
+import PostForm from "./Post/PostForm";
 import UserProfileList from "./UserProfiles/UserProfileList";
 
 export default function ApplicationViews() {
@@ -30,6 +31,7 @@ export default function ApplicationViews() {
       <Route path="/tags/edit/:id" element={<TagForm />} />
       <Route path="/myposts" element={<MyPosts />} />
       <Route path="/posts/:id" element={<PostDetail />} />
+      <Route path="/posts/create" element={<PostForm />} /> 
       <Route path="categories/create" element={<CategoryForm />} />
       <Route path="categories/delete/:id" element={<CategoryDelete />} />
       <Route path="categories/edit/:id" element={<EditCategory />} />

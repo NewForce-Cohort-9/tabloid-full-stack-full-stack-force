@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom"; // Import Link
 import { GetApprovedPosts } from "../../Managers/PostManager";
 import Post from "./Post";
 
@@ -11,6 +12,9 @@ export default function PostList() {
 
   const callGetPosts = async () => {
     const posts = await GetApprovedPosts();
+    
+  
+    
     setPosts(posts);
   };
 
@@ -29,9 +33,11 @@ export default function PostList() {
       <div className="container pt-5">
         <div className="container d-flex align-items-center justify-content-between w-full">
           <h1>All Posts</h1>
-          <a className="btn btn-outline-primary mx-1 text-primary" title="Create New Post">
-            Create New Post
-          </a>
+          <Link to="/posts/create">
+            <button className="btn btn-outline-primary mx-1 text-primary">
+              Create New Post
+            </button>
+          </Link>
         </div>
         <table className="table table-striped">
           <thead>
