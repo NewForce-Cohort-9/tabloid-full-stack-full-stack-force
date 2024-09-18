@@ -60,12 +60,12 @@ export default function PostForm() {
                 lastName: userProfile.lastName,
                 displayName: userProfile.displayName,
                 email: userProfile.email,
-                createDateTime: userProfile.createDateTime,  // Assuming you have it stored
-                imageLocation: userProfile.imageLocation || "default.jpg", // Placeholder if not present
+                createDateTime: userProfile.createDateTime,  
+                imageLocation: userProfile.imageLocation || "default.jpg", 
                 userTypeId: userProfile.userTypeId, 
                 userType: {
                     id: userProfile.userTypeId,
-                    name: userProfile.userType.name // Assuming this exists in your userProfile
+                    name: userProfile.userType.name 
                 }
             }
         };
@@ -73,8 +73,8 @@ export default function PostForm() {
         console.log("Submitting post:", newPost);
 
         addPost(newPost)
-            .then(() => navigate(`/posts`)) // Redirect on success
-            .catch((err) => console.error("Failed to add post:", err)); // Handle failure
+            .then(() => navigate(`/posts`)) 
+            .catch((err) => console.error("Failed to add post:", err)); 
     };
 
     return (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom"; // Import Link for navigation
+import { Link } from "react-router-dom"; 
 import { getPostsByUser } from "../../Managers/PostManager";
 import Post from "./Post"; 
 
@@ -26,7 +26,7 @@ export default function MyPosts() {
             <div className="container pt-5">
                 <div className="container d-flex align-items-center justify-content-between w-full">
                     <h1>All My Posts</h1>
-                    {/* Add the "Create New Post" button here */}
+                 
                     <Link to="/posts/create">
                         <button className="btn btn-outline-primary mx-1 text-primary">
                             Create New Post
