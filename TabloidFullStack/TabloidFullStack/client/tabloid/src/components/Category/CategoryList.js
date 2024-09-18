@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { GetAllCategories } from "../../Managers/CategoryManager";
 import { useEffect } from "react";
-import { TrashcanDelete } from "../Icons";
+import { EditPencil, TrashcanDelete } from "../Icons";
 import { Link } from "react-router-dom";
 
 export const Category = () => {
@@ -44,11 +44,18 @@ export const Category = () => {
                 <tr>
                   <td>{category.name}</td>
                   <td>
+                    <Link to={`edit/${category.id}`}>
+                      <a
+                        className="btn btn-outline-primary mx-1 text-primary"
+                        title="Edit"
+                      >
+                        <EditPencil size={20} />
+                      </a>
+                    </Link>
                     <Link to={`delete/${category.id}`}>
-                    <a class="btn btn-outline-danger mx-1" title="View">
-                      <TrashcanDelete color="#b91c1c" size={20} />
-                    </a>
-                    
+                      <a class="btn btn-outline-danger mx-1" title="View">
+                        <TrashcanDelete color="#b91c1c" size={20} />
+                      </a>
                     </Link>
                   </td>
                 </tr>
