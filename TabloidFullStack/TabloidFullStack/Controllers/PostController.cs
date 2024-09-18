@@ -21,5 +21,13 @@ namespace TabloidFullStack.Controllers
             var posts = _postRepository.GetApprovedPosts();
             return Ok(posts);
         }
+        [HttpGet("myposts/{userId}")]
+        public IActionResult GetPostsByUser(int userId)
+        {
+            var posts = _postRepository.GetPostsByUser(userId);
+            return Ok(posts);
+        }
+
+
     }
 }
