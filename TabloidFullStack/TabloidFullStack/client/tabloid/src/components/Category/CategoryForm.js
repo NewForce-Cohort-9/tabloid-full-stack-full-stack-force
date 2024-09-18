@@ -21,7 +21,7 @@ export const CategoryForm = () => {
 
   return (
     <>
-      <TagPageHeader title="Create new tag" />
+      <TagPageHeader title="Create new category" />
       <div className="container pt-5">
         <div className="container d-flex align-items-center justify-content-center flex-column">
           <form>
