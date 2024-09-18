@@ -19,3 +19,16 @@ export const addComment = async (singleComment) => {
           body: JSON.stringify(singleComment),
 });
 };
+
+// Fetch a comment by its ID
+export const getCommentById = (commentId) => {
+    return fetch(`${apiUrl}/${commentId}`)
+        .then(res => res.json());
+};
+
+// Delete a comment by its ID
+export const deleteComment = (commentId) => {
+    return fetch(`${apiUrl}/${commentId}`, {
+        method: 'DELETE',
+    });
+};

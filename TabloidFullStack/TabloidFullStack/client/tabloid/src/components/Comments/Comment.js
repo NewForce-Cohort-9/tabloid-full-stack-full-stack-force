@@ -1,7 +1,8 @@
 import React from "react";
 import { EditPencil, TrashcanDelete } from "../Icons";
+import { Link } from "react-router-dom";
 
-export default function Comment({ comment }) {
+export default function Comment({ comment, postId }) { //accept postId as a prop for delete
   return (
     <>
       <td style={{ maxWidth: '400px'}}>{comment.subject}</td>
@@ -12,9 +13,9 @@ export default function Comment({ comment }) {
         <a className="btn btn-outline-primary mx-1 text-primary" title="Edit Comment">
           <EditPencil size={20} />
         </a>
-        <a className="btn btn-outline-danger mx-1" title="Delete Comment">
+        <Link to={`/posts/${postId}/comments/delete/${comment.id}`} className="btn btn-outline-danger mx-1" title="Delete Comment">
           <TrashcanDelete color="#b91c1c" size={20} />
-        </a>
+        </Link>
       </td>
     </>
   );

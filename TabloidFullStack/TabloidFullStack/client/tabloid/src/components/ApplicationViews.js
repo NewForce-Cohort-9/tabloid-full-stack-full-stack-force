@@ -5,7 +5,8 @@ import { Category } from "./Category/CategoryList";
 import TagList from "./Tags/TagList";
 import  PostList  from "./Post/PostList";
 import { CommentList } from "./Comments/CommentList";
-import {CommentForm} from "./Comments/CommentForm";
+import { CommentForm } from "./Comments/CommentForm";
+import { DeleteComment } from "./Comments/DeleteComment";
 
 export default function ApplicationViews() {
   return (
@@ -16,6 +17,7 @@ export default function ApplicationViews() {
         <Route path="/posts" element={<PostList />} />
          <Route path="/posts/:postId/comments" element={<CommentList />} />
          <Route path="/posts/:postId/comments/add" element={<CommentForm />} />
+         <Route path="/posts/:postId/comments/delete/:commentId" element={<DeleteComment />} />
     </Routes>
   );
 }
