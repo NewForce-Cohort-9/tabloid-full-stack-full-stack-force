@@ -7,6 +7,7 @@ import MyPosts from "./Post/MyPosts";
 import PostDetail from "./Post/PostDetail";
 import UserProfileList from "./UserProfiles/UserProfileList";
 import Header from "./Header";
+import UserHeader from "./UserHeader";
 
 export const UserView = (isLoggedIn, setIsLoggedIn) => {
   return (
@@ -15,7 +16,7 @@ export const UserView = (isLoggedIn, setIsLoggedIn) => {
         path="/"
         element={
             <>
-            <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+            <UserHeader isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
             <Outlet />
             </>
         }

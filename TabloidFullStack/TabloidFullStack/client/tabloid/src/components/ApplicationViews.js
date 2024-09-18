@@ -11,7 +11,7 @@ export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
     setCurrentUser(userObj)
   }, [])
 
-  if(currentUser.userTypeId = 1)
+  if(currentUser.userTypeId === 1)
   {
     return (
       <AdminViews currentUser={currentUser} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
