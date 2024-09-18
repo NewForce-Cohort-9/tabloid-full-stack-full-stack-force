@@ -28,6 +28,7 @@ export const CommentList = () => {
 
   return (
     <div>
+
       <header className="masthead bg-primary text-white text-center">
         <div className="container d-flex align-items-center flex-column">
           <div className="divider-custom divider-light">
@@ -41,10 +42,11 @@ export const CommentList = () => {
       <div className="container pt-5">
         <div className="container d-flex align-items-center justify-content-between w-full">
           <h1>All Comments</h1>
-          <a className="btn btn-outline-primary mx-1 text-primary" title="Edit">
-            Create New Comment
-          </a>
-        </div>
+
+          <Link to={`/posts/${postId}/comments/add`} className="btn btn-outline-primary mx-1 text-primary"> 
+            Create New Comment 
+          </Link>
+     </div>
 
         {comments.length === 0 ? (
           <p>No comments available</p>

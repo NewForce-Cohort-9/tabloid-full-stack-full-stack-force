@@ -14,6 +14,15 @@ export default function Login({setIsLoggedIn}) {
     login({email, password})
       .then(r =>{
       if(r){
+        // Assuming r contains user data, you might want to adjust based on your actual response
+        const userProfile = {
+          id: r.id, // or r.userId if that's how your response is structured
+          displayName: r.displayName, // adjust as needed
+          userTypeId: 1, // Hardcoded UserTypeId
+        };
+
+        // Save to local storage
+        localStorage.setItem("userProfile", JSON.stringify(userProfile));
       setIsLoggedIn(true)
       navigate('/')
       }
