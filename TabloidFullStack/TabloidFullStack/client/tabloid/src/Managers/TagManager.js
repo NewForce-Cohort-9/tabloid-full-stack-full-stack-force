@@ -14,3 +14,9 @@ export const addTag = async (tag) => {
   });
   return await response.json();
 };
+
+export const deleteTag = async (tagId) => {
+  await fetch(`${tagBase}/${tagId}`, {
+    method: "DELETE",
+  });
+};
