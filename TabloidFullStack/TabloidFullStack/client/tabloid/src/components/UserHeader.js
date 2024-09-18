@@ -11,7 +11,7 @@ import {
   NavLink,
 } from "reactstrap";
 
-export default function Header({ isLoggedIn, setIsLoggedIn }) {
+export default function UserHeader({ isLoggedIn, setIsLoggedIn }) {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
@@ -32,22 +32,10 @@ export default function Header({ isLoggedIn, setIsLoggedIn }) {
                 </NavLink>
               </NavItem>
             )}
-            {isLoggedIn && (
-              <NavItem>
-                <NavLink tag={RRNavLink} to="/tags">
-                  Tags
-                </NavLink>
-              </NavItem>
-            )}
           </Nav>
           <Nav className="mr-auto" navbar>
             {isLoggedIn && (
               <>
-                <NavItem>
-                  <NavLink tag={RRNavLink} to="/categories">
-                    Category Management
-                  </NavLink>
-                </NavItem>
                 <NavItem>
                   <NavLink tag={RRNavLink} to="/posts">
                     Posts
@@ -56,11 +44,6 @@ export default function Header({ isLoggedIn, setIsLoggedIn }) {
                 <NavItem>
                   <NavLink tag={RRNavLink} to="/myposts">
                     My Posts
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={RRNavLink} to="/profiles">
-                    User Profiles
                   </NavLink>
                 </NavItem>
                 <NavItem>
