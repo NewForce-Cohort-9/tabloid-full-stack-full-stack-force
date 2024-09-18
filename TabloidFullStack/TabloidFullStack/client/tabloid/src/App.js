@@ -18,9 +18,8 @@ function App() {
 
     return (
         <Router>
-            <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
             {isLoggedIn ?
-                <ApplicationViews />
+                <ApplicationViews isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
                 :
                 <Authorize setIsLoggedIn={setIsLoggedIn} />
             }

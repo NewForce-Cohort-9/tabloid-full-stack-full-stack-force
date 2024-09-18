@@ -18,7 +18,7 @@ export default function Login({setIsLoggedIn}) {
         const userProfile = {
           id: r.id, // or r.userId if that's how your response is structured
           displayName: r.displayName, // adjust as needed
-          userTypeId: 1, // Hardcoded UserTypeId
+          userTypeId: r.userTypeId, // Hardcoded UserTypeId
         };
 
         // Save to local storage
