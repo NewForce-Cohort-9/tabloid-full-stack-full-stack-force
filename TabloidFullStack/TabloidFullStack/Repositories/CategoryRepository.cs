@@ -83,6 +83,26 @@ namespace TabloidFullStack.Repositories
                 }
             }
         }
+        public void UpdateCategory(Category category)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                               UPDATE Category
+                               SET 
+                                Name = @name
+                               WHERE Id = @id";
+
+                    DbUtils.AddParameter(cmd, "@name", category.Name);
+                    DbUtils.AddParameter(cmd, "@id", category.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
         public void DeleteCategory(int id)
         {
