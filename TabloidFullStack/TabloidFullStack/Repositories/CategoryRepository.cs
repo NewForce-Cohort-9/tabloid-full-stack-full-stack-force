@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using TabloidFullStack.Models;
+using TabloidFullStack.Utils;
 namespace TabloidFullStack.Repositories
 {
     public class CategoryRepository : BaseRepository, ICategoryRepository
@@ -30,6 +31,90 @@ namespace TabloidFullStack.Repositories
                     reader.Close();
 
                     return categories;
+                }
+            }
+        }
+        public Category GetById(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                {
+                    conn.Open();
+
+                    using (SqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"SELECT Name, Id FROM Category WHERE Id = @id";
+
+                        DbUtils.AddParameter(cmd, "@id", id);
+
+                        SqlDataReader reader = cmd.ExecuteReader();
+
+                        if (reader.Read())
+                        {
+                            Category category = new Category
+                            {
+                                Id = id,
+                                Name = DbUtils.GetString(reader, "Name")
+                            };
+                            reader.Close();
+                            return category;
+
+                        }
+                        reader.Close();
+                        return null;
+                    }
+                }
+            }
+        }
+        public void AddCategory(Category category)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO Category (Name) OUTPUT INSERTED.ID VALUES (@name)";
+
+                    DbUtils.AddParameter(cmd, "@name", category.Name);
+
+                    int id = (int)cmd.ExecuteScalar();
+
+                    category.Id = id;
+                }
+            }
+        }
+        public void UpdateCategory(Category category)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                               UPDATE Category
+                               SET 
+                                Name = @name
+                               WHERE Id = @id";
+
+                    DbUtils.AddParameter(cmd, "@name", category.Name);
+                    DbUtils.AddParameter(cmd, "@id", category.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeleteCategory(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"DELETE FROM Category WHERE Id = @id";
+
+                   DbUtils.AddParameter(cmd, "@id", id);
+                   cmd.ExecuteNonQuery();
                 }
             }
         }

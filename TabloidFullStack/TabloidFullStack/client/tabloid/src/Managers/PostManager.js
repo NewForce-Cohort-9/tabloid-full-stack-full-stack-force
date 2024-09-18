@@ -5,3 +5,11 @@ export const GetApprovedPosts = () => {
         .then((res) => res.json());
 };
 
+
+export const getPostsByUser = (userId) => {
+    return fetch(`${apiUrl}/api/post/myposts/${userId}`).then(res => res.json());
+};
+
+export const getPostById = (id) => {
+    return fetch(`${apiUrl}/api/post/${id}`).then(res => res.json());
+}

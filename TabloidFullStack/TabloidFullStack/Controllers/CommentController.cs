@@ -9,14 +9,10 @@ namespace TabloidFullStack.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ICommentRepository _commentRepository;
-        private readonly IPostRepository _postRepository;
-        private readonly IUserRepository _userRepository;
 
-        public CommentController(ICommentRepository commentRepository, IPostRepository postRepository, IUserRepository userRepository)
+        public CommentController(ICommentRepository commentRepository)
         {
             _commentRepository = commentRepository;
-            _postRepository = postRepository;
-            _userRepository = userRepository;
         }
 
         // GET: api/Comment?postId=1
