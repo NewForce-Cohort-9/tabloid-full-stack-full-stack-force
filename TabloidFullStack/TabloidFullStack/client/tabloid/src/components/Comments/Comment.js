@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 export default function Comment({ comment, postId }) { //accept postId as a prop for delete
   return (
     <>
-      <td style={{ maxWidth: '400px'}}>{comment.subject}</td>
-      <td style={{ maxWidth: '400px'}}> {comment.content}</td>
+      <td>{comment.subject}</td>
+      <td>{comment.content}</td>
       <td>{comment.userProfile.displayName}</td>
       <td>{comment.createDateTime}</td>
       <td>

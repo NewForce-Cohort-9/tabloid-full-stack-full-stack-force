@@ -57,5 +57,103 @@ namespace TabloidFullStack.Repositories
                 }
             }
         }
+        public List<Post> GetPostsByUser(int userId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                SELECT p.Id, p.Title, p.Content, p.CreateDateTime, p.PublishDateTime, p.IsApproved,
+                       p.CategoryId, c.Name as CategoryName, u.DisplayName as Author
+                FROM Post p
+                JOIN UserProfile u ON p.UserProfileId = u.Id
+                JOIN Category c ON p.CategoryId = c.Id
+                WHERE p.UserProfileId = @userId
+                ORDER BY p.CreateDateTime DESC";
+
+                    cmd.Parameters.AddWithValue("@userId", userId);
+
+                    var reader = cmd.ExecuteReader();
+                    var posts = new List<Post>();
+
+                    while (reader.Read())
+                    {
+                        posts.Add(new Post
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Title = reader.GetString(reader.GetOrdinal("Title")),
+                            Content = reader.GetString(reader.GetOrdinal("Content")),
+                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                            PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
+                            IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
+                            Category = new Category
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("CategoryId")),
+                                Name = reader.GetString(reader.GetOrdinal("CategoryName"))
+                            },
+                            Author = new UserProfile
+                            {
+                                DisplayName = reader.GetString(reader.GetOrdinal("Author"))
+                            }
+                        });
+                    }
+
+                    reader.Close();
+                    return posts;
+                }
+            }
+        }
+
+        public Post GetPostById(int postId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                SELECT p.Id, p.Title, p.Content, p.ImageLocation, p.CreateDateTime, p.PublishDateTime, p.IsApproved,
+                       c.Name AS CategoryName, u.DisplayName AS Author
+                FROM Post p
+                JOIN Category c ON p.CategoryId = c.Id
+                JOIN UserProfile u ON p.UserProfileId = u.Id
+                WHERE p.Id = @postId";
+
+                    cmd.Parameters.AddWithValue("@postId", postId);
+
+                    var reader = cmd.ExecuteReader();
+                    Post post = null;
+
+                    if (reader.Read())
+                    {
+                        post = new Post
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Title = reader.GetString(reader.GetOrdinal("Title")),
+                            Content = reader.GetString(reader.GetOrdinal("Content")),
+                            ImageLocation = reader.IsDBNull(reader.GetOrdinal("ImageLocation"))
+                                ? null
+                                : reader.GetString(reader.GetOrdinal("ImageLocation")),
+                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                            PublishDateTime = reader.IsDBNull(reader.GetOrdinal("PublishDateTime"))
+                                ? (DateTime?)null
+                                : reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
+                            Author = new UserProfile
+                            {
+                                DisplayName = reader.GetString(reader.GetOrdinal("Author"))
+                            }
+                        };
+                    }
+
+                    reader.Close();
+                    return post;
+                }
+            }
+        }
+
+
+
     }
 }
