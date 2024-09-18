@@ -9,53 +9,74 @@ export default function PostForm() {
         content: '',
         imageLocation: '',
         publishDateTime: '',
-        categoryId: ''
+        categoryId: '' // For storing category id from dropdown
     });
+    
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
 
-    // Fetch all categories for dropdown
+    // Fetch categories for the dropdown
     useEffect(() => {
         GetAllCategories().then(setCategories);
     }, []);
 
+    // Handle form changes
     const handleChange = (e) => {
         const { name, value } = e.target;
         setPost({
             ...post,
-            [name]: name === 'categoryId' ? Number(value) : value  
+            [name]: name === 'categoryId' ? Number(value) : value // Convert categoryId to a number
         });
     };
 
+    // Handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
-        
-        const userProfile = JSON.parse(localStorage.getItem("userProfile")); // Ensure this gets the correct profile
-        
-        const selectedCategory = categories.find(cat => cat.id === post.categoryId); // Get the full category
-    
-        const newPost = { 
-            ...post, 
-            isApproved: true, 
+
+        // Get user profile from localStorage
+        const userProfile = JSON.parse(localStorage.getItem("userProfile")); 
+
+        // Find selected category object by id
+        const selectedCategory = categories.find(c => c.id === post.categoryId);
+
+        if (!userProfile || !selectedCategory) {
+            console.error("Missing userProfile or selectedCategory");
+            return;
+        }
+
+        // Structure the full post object
+        const newPost = {
+            ...post,
+            isApproved: true,
             createDateTime: new Date().toISOString(),
             category: {
                 id: selectedCategory.id,
                 name: selectedCategory.name
             },
-            author: {  // Include the full author object
+            userProfileId: userProfile.id,
+            author: {
                 id: userProfile.id,
                 firstName: userProfile.firstName,
                 lastName: userProfile.lastName,
                 displayName: userProfile.displayName,
-                email: userProfile.email
+                email: userProfile.email,
+                createDateTime: userProfile.createDateTime,  // Assuming you have it stored
+                imageLocation: userProfile.imageLocation || "default.jpg", // Placeholder if not present
+                userTypeId: userProfile.userTypeId, 
+                userType: {
+                    id: userProfile.userTypeId,
+                    name: userProfile.userType.name // Assuming this exists in your userProfile
+                }
             }
         };
-        
+
+        console.log("Submitting post:", newPost);
+
         addPost(newPost)
-            .then(() => navigate(`/posts`))
-            .catch((err) => console.error("Failed to add post:", err));
+            .then(() => navigate(`/posts`)) // Redirect on success
+            .catch((err) => console.error("Failed to add post:", err)); // Handle failure
     };
-    
+
     return (
         <form onSubmit={handleSubmit}>
             <fieldset>
