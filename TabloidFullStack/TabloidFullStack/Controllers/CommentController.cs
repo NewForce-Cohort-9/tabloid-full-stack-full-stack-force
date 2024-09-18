@@ -1,19 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
-using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Mvc;
 using TabloidFullStack.Models;
 using TabloidFullStack.Repositories;
 
-
 namespace TabloidFullStack.Controllers
 {
-    public class CommentController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CommentController : ControllerBase
     {
         private readonly ICommentRepository _commentRepository;
         private readonly IPostRepository _postRepository;
         private readonly IUserRepository _userRepository;
-
 
         public CommentController(ICommentRepository commentRepository, IPostRepository postRepository, IUserRepository userRepository)
         {
@@ -22,149 +19,35 @@ namespace TabloidFullStack.Controllers
             _userRepository = userRepository;
         }
 
-        // GET: CommentController
-        public ActionResult Index(int postId)
+        // GET: api/Comment?postId=1
+        [HttpGet]
+        public IActionResult GetAll(int postId)
         {
+            return Ok(_commentRepository.GetCommentsByPostId(postId));
+        }
 
-            var comments = _commentRepository.GetCommentsByPostId(postId);
-            var post = _postRepository.GetPublishedPostById(postId); // Fetch post details
-
-            // Get the current user's ID from authentication 
-            var currentUserIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            // Convert the current user's ID to an integer
-            int currentUserId = int.Parse(currentUserIdString);
-
-            var viewModel = new CommentViewModel
+        // GET: api/Comment/{id}
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            var comment = _commentRepository.GetCommentById(id);
+            if (comment == null)
             {
-                PostId = postId,
-                PostTitle = post.Title,
-                Comments = comments,
-                CurrentUserId = currentUserId // Pass the current user’s ID to the view model
-            };
-
-            return View(viewModel);
+                return NotFound();
+            }
+            return Ok(comment);
         }
 
-        // GET: CommentController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Comment/Create
-        public ActionResult Create(int postId)
-        {
-            var comment = new Comment
-            {
-                PostId = postId,
-                UserProfileId = GetCurrentUserProfileId()
-            };
-
-            return View(comment);
-        }
-
-        // POST: Comment/Create
+        // POST: api/Comment
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(Comment comment)
+        public IActionResult Post(Comment comment)
         {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    comment.CreateDateTime = DateTime.Now;
-                    comment.UserProfileId = GetCurrentUserProfileId();
-
-                    _commentRepository.Add(comment);
-
-                    return RedirectToAction("Index", new { postId = comment.PostId });
-                }
-                catch (Exception ex)
-                {
-
-                    ModelState.AddModelError("", "An error occurred while creating the comment. Please try again.");
-                    Console.WriteLine("Error creating comment: " + ex.Message);
-
-                }
-            }
-
-            return View(comment);
-
+            comment.CreateDateTime = DateTime.Now;
+            // comment.UserProfileId = client side get user profile from local storage 
+            _commentRepository.Add(comment);
+            return CreatedAtAction("GetAll", new { id = comment.Id }, comment);
         }
 
-
-        // GET: Comment/Edit/5
-        public IActionResult Edit(int id)
-        {
-            var comment = _commentRepository.GetCommentById(id);
-
-            if (comment == null)
-            {
-                return NotFound();
-            }
-
-            return View(comment);
-
-        }
-
-        // POST: Comment/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Comment comment)
-        {
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _commentRepository.Edit(id, comment);
-
-                    return RedirectToAction("Index", new { postId = comment.PostId });
-                    // Note: going back to Index, so look up at Index method in controller, it takes postId parameter so MUST HAVE ,new { postId = postId }
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", "An error occurred while updating the comment. Please try again.");
-
-                }
-            }
-
-            return View(comment);
-        }
-
-        // GET: CommentController/Delete/5
-        public IActionResult Delete(int id)
-        {
-            var comment = _commentRepository.GetCommentById(id);
-            if (comment == null)
-            {
-                return NotFound();
-            }
-            return View(comment);
-        }
-
-        // POST: CommentController/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            var comment = _commentRepository.GetCommentById(id);
-            if (comment == null)
-            {
-                return NotFound();
-            }
-            _commentRepository.Delete(id);
-            return RedirectToAction("Index", new { postId = comment.PostId });
-        }
-
-
-
-
-        private int GetCurrentUserProfileId()
-        {
-            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return int.Parse(id);
-        }
+        // Removed the DELETE method
     }
 }
