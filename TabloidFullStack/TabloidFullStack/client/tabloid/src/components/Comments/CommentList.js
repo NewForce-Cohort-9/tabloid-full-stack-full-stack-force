@@ -53,7 +53,8 @@ export const CommentList = () => {
             <tbody>
               {comments.map(comment => (
                 <tr key={comment.id}>
-                  <Comment comment={comment} />
+                  <Comment comment={comment} postId={postId}/> 
+                  {/* pass postId to comment component for delete*/}
                 </tr>
               ))}
             </tbody>

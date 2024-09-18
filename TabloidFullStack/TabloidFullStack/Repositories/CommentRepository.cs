@@ -1,59 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Reflection.PortableExecutable;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-//using NuGet.Protocol.Plugins;
+﻿using Microsoft.Data.SqlClient;
 using TabloidFullStack.Models;
-using TabloidFullStack.Repositories;
-using TabloidFullStack.Models;
-using TabloidFullStack.Utils;
 
 namespace TabloidFullStack.Repositories
 {
     public class CommentRepository : BaseRepository, ICommentRepository
     {
         public CommentRepository(IConfiguration config) : base(config) { }
-
-
-        ////COMMENTED OUT CODE: No longer want to GetAllComments, 
-        //////instead want to get comments specific to a selected post
-
-        //public List<Comment> GetAllComments()
-        //{
-        //    using (var conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (var cmd = conn.CreateCommand())
-        //        {
-        //            //link back to post? instead of showing p.Id in SELECT
-        //            cmd.CommandText = @"
-        //               SELECT c.Id, c.Subject, c.Content, c.UserProfileId, c.CreateDateTime, p.Title, u.DisplayName AS Author, p.Id AS PostId, p.Title AS TitleOfPost
-        //               FROM Comment c
-        //                      LEFT JOIN Post p ON p.Id = c.PostId
-        //                      LEFT JOIN UserProfile u ON c.UserProfileId = u.Id
-        //                      ORDER BY c.CreateDateTime DESC
-        //                      ";
-        //            var reader = cmd.ExecuteReader();
-
-        //            var comments = new List<Comment>();
-
-        //            while (reader.Read())
-        //            {
-        //                comments.Add(NewCommentFromReader(reader));
-        //            }
-
-        //            reader.Close();
-
-        //            return comments;
-        //        }
-        //    }
-        //}
-
-
+ 
         public List<Comment> GetCommentsByPostId(int postId)
         {
             using (var conn = Connection)
