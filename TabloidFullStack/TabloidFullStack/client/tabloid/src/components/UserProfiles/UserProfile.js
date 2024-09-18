@@ -4,7 +4,6 @@ import { getByProfileId } from "../../Managers/UserProfileManager";
 
 export default function UserProfile() {
   const [profile, setProfile] = useState(null);
-
   const { id: profileId } = useParams();
 
   useEffect(() => {
@@ -13,7 +12,6 @@ export default function UserProfile() {
 
   const callGetProfile = async () => {
     const profile = await getByProfileId(profileId);
-    console.log("p", profile);
     setProfile(profile);
   };
 
@@ -45,7 +43,7 @@ export default function UserProfile() {
                 <h5 className="my-3">{profile.displayName}</h5>
                 <p className="text-muted mb-1">
                   {profile.fullName ??
-                    `${profile.firstName} + ${profile.lastName}`}
+                    `${profile.firstName} ${profile.lastName}`}
                 </p>
                 <p className="text-muted mb-4">{profile.email}</p>
                 <div className="d-flex justify-content-center mb-2">
@@ -82,7 +80,7 @@ export default function UserProfile() {
                   <div className="col-sm-9">
                     <p className="text-muted mb-0">
                       {profile.fullName ??
-                        `${profile.firstName} + ${profile.lastName}`}
+                        `${profile.firstName} ${profile.lastName}`}
                     </p>
                   </div>
                 </div>
