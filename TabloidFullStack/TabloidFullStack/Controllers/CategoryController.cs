@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TabloidFullStack.Models;
 using TabloidFullStack.Repositories;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -24,27 +25,42 @@ namespace TabloidFullStack.Controllers
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            var category = _categoryRepository.GetById(id);
+            if(category == null)
+            {
+                return NotFound();
+            }
+            return Ok(category);
         }
 
         // POST api/<CategoryController>
         [HttpPost]
-        public void Post([FromBody] string value)
-        {
+        public IActionResult Post(Category category)
+        { 
+            _categoryRepository.AddCategory(category);
+            return CreatedAtAction("Get", new {id = category.Id}, category);
         }
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(int id, Category category)
         {
+            if (id != category.Id)
+            {
+                return BadRequest();
+            }
+            _categoryRepository.UpdateCategory(category);
+            return NoContent();
         }
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            _categoryRepository.DeleteCategory(id);
+            return NoContent();
         }
     }
 }
