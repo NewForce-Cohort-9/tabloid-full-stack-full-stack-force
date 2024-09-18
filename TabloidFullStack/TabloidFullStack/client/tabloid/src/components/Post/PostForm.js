@@ -20,19 +20,42 @@ export default function PostForm() {
     }, []);
 
     const handleChange = (e) => {
-        setPost({ ...post, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setPost({
+            ...post,
+            [name]: name === 'categoryId' ? Number(value) : value  
+        });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        
+        const userProfile = JSON.parse(localStorage.getItem("userProfile")); // Ensure this gets the correct profile
+        
+        const selectedCategory = categories.find(cat => cat.id === post.categoryId); // Get the full category
+    
         const newPost = { 
             ...post, 
             isApproved: true, 
-            createDateTime: new Date().toISOString() //automatically setting date to current date
+            createDateTime: new Date().toISOString(),
+            category: {
+                id: selectedCategory.id,
+                name: selectedCategory.name
+            },
+            author: {  // Include the full author object
+                id: userProfile.id,
+                firstName: userProfile.firstName,
+                lastName: userProfile.lastName,
+                displayName: userProfile.displayName,
+                email: userProfile.email
+            }
         };
-        addPost(newPost).then(() => navigate(`/posts`)); 
+        
+        addPost(newPost)
+            .then(() => navigate(`/posts`))
+            .catch((err) => console.error("Failed to add post:", err));
     };
-
+    
     return (
         <form onSubmit={handleSubmit}>
             <fieldset>

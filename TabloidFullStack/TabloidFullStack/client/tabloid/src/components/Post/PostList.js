@@ -12,6 +12,10 @@ export default function PostList() {
 
   const callGetPosts = async () => {
     const posts = await GetApprovedPosts();
+    
+    // Log all posts to see if they are fetched correctly
+    console.log("Fetched Posts:", posts);
+    
     setPosts(posts);
   };
 

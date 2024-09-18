@@ -21,5 +21,15 @@ export const addPost = (post) => {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(post)
-    }).then(res => res.json());
-}
+    })
+    .then(res => {
+        if (!res.ok) {
+            // Log the status and error message if the response isn't ok
+            return res.json().then(errorData => {
+                console.error('Error:', res.status, errorData);
+                throw new Error('Failed to add post');
+            });
+        }
+        return res.json();
+    });
+};
