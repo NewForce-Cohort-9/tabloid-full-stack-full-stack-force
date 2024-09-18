@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Input } from "reactstrap";
-import { addTag, updateTag } from "../../Managers/TagManager";
+import { addTag, updateTag, getById } from "../../Managers/TagManager";
 import TagPageHeader from "./TagPageHeader";
 
 export default function TagForm() {
@@ -22,6 +22,15 @@ export default function TagForm() {
     }
   };
 
+  const callGetTag = async () => {
+    const tag = await getById(tagId);
+    setTagName(tag.name);
+  };
+
+  useEffect(() => {
+    if (tagId) callGetTag(tagId);
+  }, [tagId]);
+
   return (
     <>
       <TagPageHeader title={tagId ? "Edit tag" : "Create new tag"} />
@@ -35,7 +44,10 @@ export default function TagForm() {
             ) : (
               <h1 className="p-4">Enter a new tag name</h1>
             )}
-            <Input onChange={(e) => setTagName(e.target.value)} />
+            <Input
+              placeholder={tagName}
+              onChange={(e) => setTagName(e.target.value)}
+            />
 
             <button
               type="submit"

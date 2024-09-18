@@ -6,6 +6,11 @@ export const getAllTags = async () => {
   if (response.ok) return await response.json();
 };
 
+export const getById = async (tagId) => {
+  const response = await fetch(`${tagBase}/${tagId}`);
+  if (response.ok) return await response.json();
+};
+
 export const addTag = async (tag) => {
   const response = await fetch(tagBase, {
     method: "POST",
