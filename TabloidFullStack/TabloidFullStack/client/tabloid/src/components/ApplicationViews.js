@@ -13,7 +13,7 @@ export default function ApplicationViews() {
       <Route path="/categories" element={<Category />} />
       <Route path="/tags" element={<TagList />} />
         <Route path="/posts" element={<PostList />} />
-        <Route path="/comments/:postId" element={<CommentList />} />
+        <Route path="/posts/:postId/comments" element={<CommentList />} />
     </Routes>
   );
 }
