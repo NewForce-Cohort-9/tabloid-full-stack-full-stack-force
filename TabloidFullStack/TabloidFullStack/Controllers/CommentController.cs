@@ -44,6 +44,6 @@ namespace TabloidFullStack.Controllers
             return CreatedAtAction("GetAll", new { id = comment.Id }, comment);
         }
 
-        // Removed the DELETE method
+        
     }
 }
