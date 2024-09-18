@@ -1,21 +1,27 @@
 const apiUrl = "https://localhost:5001";
 const profileBase = `${apiUrl}/api/UserProfile`;
 
+// Update login function to include error handling
 export const login = (userObject) => {
   return fetch(`${apiUrl}/api/userprofile/getbyemail?email=${userObject.email}`)
-    .then((r) => r.json())
+    .then((r) => {
+      if (!r.ok) {
+        throw new Error("Login failed"); // Added error handling for response
+      }
+      return r.json();
+    })
     .then((userProfile) => {
       if (userProfile.id) {
         localStorage.setItem("userProfile", JSON.stringify(userProfile));
         return userProfile;
       } else {
-        return undefined;
+        return undefined; // This handles cases where userProfile is not found
       }
     });
 };
 
 export const logout = () => {
-  localStorage.clear();
+  localStorage.clear(); // Clears the user profile on logout
 };
 
 export const register = (userObject, password) => {
@@ -26,19 +32,25 @@ export const register = (userObject, password) => {
     },
     body: JSON.stringify(userObject),
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Registration failed"); // Added error handling for registration
+      }
+      return response.json();
+    })
     .then((savedUserProfile) => {
       localStorage.setItem("userProfile", JSON.stringify(savedUserProfile));
     });
 };
 
+// UserProfileContext provider setup remains the same
 export const getAllProfiles = async () => {
   const response = await fetch(profileBase);
   return await response.json();
 };
 
 // return (
-//   <UserProfileContext.Provider value={{ isLoggedIn, login, logout, register,  }}>
+//   <UserProfileContext.Provider value={{ isLoggedIn, login, logout, register }}>
 //      {props.children}
 //   </UserProfileContext.Provider>
 // );

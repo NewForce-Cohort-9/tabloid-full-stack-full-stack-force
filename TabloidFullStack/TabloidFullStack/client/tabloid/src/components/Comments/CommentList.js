@@ -27,18 +27,21 @@ export const CommentList = () => {
       </header>
 
       <div className="container pt-5">
-        <div className="container d-flex align-items-center justify-content-between w-full">
+        <div className="d-flex align-items-center justify-content-between w-100">
           <h1>All Comments</h1>
+          <Link to={`/posts/${postId}/comments/add`} className="btn btn-outline-primary mx-1 text-primary">
+            Add Comment
+          </Link>
         </div>
 
-        <div>
+        <div className="mt-3">
           <Link to={`/posts/${postId}`} className="btn btn-secondary">Back to Post</Link>
         </div>
 
         {comments.length === 0 ? (
           <p>No comments available</p>
         ) : (
-          <table className="table table-striped">
+          <table className="table table-striped mt-3">
             <thead>
               <tr>
                 <th>Subject</th>
