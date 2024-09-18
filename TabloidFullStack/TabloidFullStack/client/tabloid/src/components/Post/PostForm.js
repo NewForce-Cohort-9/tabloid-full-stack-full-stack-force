@@ -44,7 +44,7 @@ export default function PostForm() {
             return;
         }
 
-        // Structure the full post object
+        
         const newPost = {
             ...post,
             isApproved: true,
@@ -70,7 +70,7 @@ export default function PostForm() {
             }
         };
 
-        console.log("Submitting post:", newPost);
+        
 
         addPost(newPost)
             .then(() => navigate(`/posts`)) 
