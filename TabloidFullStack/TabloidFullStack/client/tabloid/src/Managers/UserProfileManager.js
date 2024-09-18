@@ -49,6 +49,11 @@ export const getAllProfiles = async () => {
   return await response.json();
 };
 
+export const getByProfileId = async (profileId) => {
+  const response = await fetch(`${profileBase}/${profileId}`);
+  return await response.json();
+};
+
 // return (
 //   <UserProfileContext.Provider value={{ isLoggedIn, login, logout, register }}>
 //      {props.children}
