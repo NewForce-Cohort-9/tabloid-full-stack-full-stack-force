@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TabloidFullStack.Models;
 using TabloidFullStack.Repositories;
 
 namespace TabloidFullStack.Controllers
@@ -36,6 +37,15 @@ namespace TabloidFullStack.Controllers
                 return NotFound();
             }
             return Ok(post);
+        }
+
+        [HttpPost]
+        public IActionResult Post(Post post)
+        {
+            post.CreateDateTime = DateTime.Now;
+            post.IsApproved = true;
+            _postRepository.AddPost(post);
+            return CreatedAtAction("GetPostById", new { id = post.Id }, post); 
         }
 
     }
