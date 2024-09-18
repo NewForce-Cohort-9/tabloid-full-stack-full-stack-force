@@ -27,7 +27,16 @@ namespace TabloidFullStack.Controllers
             var posts = _postRepository.GetPostsByUser(userId);
             return Ok(posts);
         }
-
+        [HttpGet("{id}")]
+        public IActionResult GetPostById(int id)
+        {
+            var post = _postRepository.GetPostById(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+            return Ok(post);
+        }
 
     }
 }
