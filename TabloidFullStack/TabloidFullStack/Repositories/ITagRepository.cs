@@ -7,5 +7,6 @@ namespace TabloidFullStack.Repositories
         List<Tag> GetAll();
         void Add(Tag tag);
         void Delete(int id);   
+        void Update(Tag tag);   
     }
 }

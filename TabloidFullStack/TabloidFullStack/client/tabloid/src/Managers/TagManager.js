@@ -20,3 +20,11 @@ export const deleteTag = async (tagId) => {
     method: "DELETE",
   });
 };
+
+export const updateTag = async (tag) => {
+  await fetch(`${tagBase}/${tag.id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(tag),
+  });
+};

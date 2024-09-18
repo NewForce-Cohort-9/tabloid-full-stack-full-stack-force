@@ -72,6 +72,26 @@ namespace TabloidFullStack.Repositories
                 }
             }
         }
+
+        public void Update(Tag tag)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        UPDATE Tag
+                            SET Name = @Name
+                        WHERE Id = @Id";
+
+                    DbUtils.AddParameter(cmd, "@Id", tag.Id); 
+                    DbUtils.AddParameter(cmd, "@Name", tag.Name);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
     
