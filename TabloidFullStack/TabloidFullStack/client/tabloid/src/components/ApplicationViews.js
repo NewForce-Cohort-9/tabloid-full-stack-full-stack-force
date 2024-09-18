@@ -14,13 +14,25 @@ import MyPosts from "./Post/MyPosts";
 import { CommentList } from "./Comments/CommentList";
 import { CommentForm } from "./Comments/CommentForm";
 import { DeleteComment } from "./Comments/DeleteComment";
+import PostForm from "./Post/PostForm";
 import UserProfileList from "./UserProfiles/UserProfileList";
 
 export default function ApplicationViews() {
   return (
     <Routes>
       <Route path="/" element={<Hello />} />
-      <Route path="categories" element={<Category />} />
+      <Route index path="categories" element={<Category />} />
+      <Route path="/tags" element={<TagList />} />
+        <Route path="/posts" element={<PostList />} />
+         <Route path="/posts/:postId/comments" element={<CommentList />} />
+         <Route path="/posts/:postId/comments/add" element={<CommentForm />} />
+      <Route path="/posts/:postId/comments" element={<CommentList />} />
+      <Route path="/tags/add" element={<TagForm />} />
+      <Route path="/tags/delete/:id" element={<TagDelete />} />
+      <Route path="/tags/edit/:id" element={<TagForm />} />
+      <Route path="/myposts" element={<MyPosts />} />
+      <Route path="/posts/:id" element={<PostDetail />} />
+      <Route path="/posts/create" element={<PostForm />} /> 
       <Route path="categories/create" element={<CategoryForm />} />
       <Route path="categories/delete/:id" element={<CategoryDelete />} />
       <Route path="categories/edit/:id" element={<EditCategory />} />
