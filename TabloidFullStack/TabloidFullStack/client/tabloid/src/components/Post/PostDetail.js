@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { getPostById, deletePost } from "../../Managers/PostManager"; 
 
 export default function PostDetails() {
@@ -35,6 +35,11 @@ export default function PostDetails() {
       <button className="btn btn-secondary" onClick={() => navigate("/posts")}>
         Back to posts
       </button>
+
+      {/* Link to the comment list page */}
+      <Link to={`/posts/${id}/comments`} className="btn btn-outline-primary mx-1" title="View Comments">
+               View Comments
+      </Link>
     </div>
   );
 }
