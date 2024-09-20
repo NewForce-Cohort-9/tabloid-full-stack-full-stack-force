@@ -58,7 +58,7 @@ namespace TabloidFullStack.Controllers
             return NoContent();
         }
 
-        // PUT api/<CommentController>/5
+        // PUT api/Comment/{id}
         [HttpPut("{id}")]
         public IActionResult Put(int id, Comment comment)
         {
@@ -67,7 +67,7 @@ namespace TabloidFullStack.Controllers
                 return BadRequest();
             }
 
-            _commentRepository.Update(comment);
+            _commentRepository.Edit(id,comment);
             return NoContent();
         }
     }
