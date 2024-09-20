@@ -14,15 +14,24 @@ export const addComment = async (singleComment) => {
 });
 };
 
-// Fetch a comment by its ID
 export const getCommentById = (commentId) => {
     return fetch(`${apiUrl}/${commentId}`)
         .then(res => res.json());
 };
 
-// Delete a comment by its ID
 export const deleteComment = (commentId) => {
     return fetch(`${apiUrl}/${commentId}`, {
         method: 'DELETE',
     });
+};
+
+export const editComment = async (commentId, updatedComment) => {
+    const response = await fetch(`${apiUrl}/${commentId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedComment),
+    });
+
 };

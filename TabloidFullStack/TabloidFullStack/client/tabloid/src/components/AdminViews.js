@@ -32,36 +32,24 @@ export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
         }
       >
         <Route path="/" element={<Hello />} />
-        <Route index path="categories" element={<Category />} />
         <Route path="/tags" element={<TagList />} />
-        <Route path="/posts" element={<PostList />} />
-        <Route path="/posts/:postId/comments" element={<CommentList />} />
-        <Route path="/posts/:postId/comments/add" element={<CommentForm />} />
-        <Route path="/posts/:postId/comments" element={<CommentList />} />
         <Route path="/tags/add" element={<TagForm />} />
         <Route path="/tags/delete/:id" element={<TagDelete />} />
         <Route path="/tags/edit/:id" element={<TagForm />} />
-        <Route path="/myposts" element={<MyPosts />} />
-        <Route path="/posts/:id" element={<PostDetail />} />
-        <Route path="/posts/create" element={<PostForm />} />
+
+        <Route index path="categories" element={<Category />} />
         <Route path="categories/create" element={<CategoryForm />} />
         <Route path="categories/delete/:id" element={<CategoryDelete />} />
         <Route path="categories/edit/:id" element={<EditCategory />} />
 
-        <Route path="/tags" element={<TagList />} />
-        <Route path="/tags/add" element={<TagForm />} />
-        <Route path="/tags/delete/:id" element={<TagDelete />} />
-        <Route path="/tags/edit/:id" element={<TagForm />} />
-
         <Route path="/posts" element={<PostList />} />
         <Route path="/myposts" element={<MyPosts />} />
+        <Route path="/posts/create" element={<PostForm />} />
         <Route path="/posts/:id" element={<PostDetail />} />
         <Route path="/posts/:postId/comments" element={<CommentList />} />
         <Route path="/posts/:postId/comments/add" element={<CommentForm />} />
-        <Route
-          path="/posts/:postId/comments/delete/:commentId"
-          element={<DeleteComment />}
-        />
+        <Route path="/posts/:postId/comments/delete/:commentId" element={<DeleteComment />}/>
+        <Route path="/posts/:postId/comments/edit/:commentId" element={<CommentForm />}/>
 
         <Route path="/profiles" element={<UserProfileList />} />
         <Route path="/profile/:id" element={<UserProfile />} />
