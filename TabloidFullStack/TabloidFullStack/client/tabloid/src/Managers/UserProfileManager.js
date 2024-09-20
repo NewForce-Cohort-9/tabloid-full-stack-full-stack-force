@@ -62,3 +62,9 @@ export const getByProfileId = async (profileId) => {
   if (response.ok) return await response.json();
   else return null;
 };
+
+
+export const getUserProfileById = (id) => {
+    return fetch(`${apiUrl}/api/UserProfile/${id}`)
+        .then((res) => res.json());
+};

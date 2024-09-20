@@ -178,6 +178,20 @@ namespace TabloidFullStack.Repositories
             }
         }
 
+        public void DeletePost(int postId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"DELETE FROM Post WHERE Id = @postId";
+                    cmd.Parameters.AddWithValue("@postId", postId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
 
     }
 }

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GetAllCategories } from '../../Managers/CategoryManager'; 
-import { addPost } from '../../Managers/PostManager'; 
+import { GetAllCategories } from '../../Managers/CategoryManager';
+import { addPost } from '../../Managers/PostManager';
+import { getUserProfileById } from '../../Managers/UserProfileManager';
 
 export default function PostForm() {
     const [post, setPost] = useState({
@@ -9,9 +10,9 @@ export default function PostForm() {
         content: '',
         imageLocation: '',
         publishDateTime: '',
-        categoryId: '' // For storing category id from dropdown
+        categoryId: '' 
     });
-    
+
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
 
@@ -20,12 +21,24 @@ export default function PostForm() {
         GetAllCategories().then(setCategories);
     }, []);
 
+    // Fetch full user profile from API
+    useEffect(() => {
+        const localProfile = JSON.parse(localStorage.getItem("userProfile"));
+        
+        if (localProfile && localProfile.id) {
+            getUserProfileById(localProfile.id).then((profileData) => {
+                localStorage.setItem("userProfile", JSON.stringify(profileData)); // Update local storage with full profile
+                setPost({ ...post, author: profileData });
+            });
+        }
+    }, []);
+
     // Handle form changes
     const handleChange = (e) => {
         const { name, value } = e.target;
         setPost({
             ...post,
-            [name]: name === 'categoryId' ? Number(value) : value // Convert categoryId to a number
+            [name]: name === 'categoryId' ? Number(value) : value 
         });
     };
 
@@ -33,10 +46,7 @@ export default function PostForm() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Get user profile from localStorage
         const userProfile = JSON.parse(localStorage.getItem("userProfile")); 
-
-        // Find selected category object by id
         const selectedCategory = categories.find(c => c.id === post.categoryId);
 
         if (!userProfile || !selectedCategory) {
@@ -44,7 +54,6 @@ export default function PostForm() {
             return;
         }
 
-        
         const newPost = {
             ...post,
             isApproved: true,
@@ -60,21 +69,19 @@ export default function PostForm() {
                 lastName: userProfile.lastName,
                 displayName: userProfile.displayName,
                 email: userProfile.email,
-                createDateTime: userProfile.createDateTime,  
-                imageLocation: userProfile.imageLocation || "default.jpg", 
-                userTypeId: userProfile.userTypeId, 
+                createDateTime: userProfile.createDateTime,
+                imageLocation: userProfile.imageLocation || "default.jpg",
+                userTypeId: userProfile.userTypeId,
                 userType: {
                     id: userProfile.userTypeId,
-                    name: userProfile.userType.name 
+                    name: userProfile.displayName 
                 }
             }
         };
 
-        
-
         addPost(newPost)
             .then(() => navigate(`/posts`)) 
-            .catch((err) => console.error("Failed to add post:", err)); 
+            .catch((err) => console.error("Failed to add post:", err));
     };
 
     return (
