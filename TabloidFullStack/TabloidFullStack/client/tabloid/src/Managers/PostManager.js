@@ -33,3 +33,9 @@ export const addPost = (post) => {
         return res.json();
     });
 };
+
+export const deletePost = (id) => {
+    return fetch(`${apiUrl}/api/post/${id}`, {
+        method: "DELETE",
+    });
+};

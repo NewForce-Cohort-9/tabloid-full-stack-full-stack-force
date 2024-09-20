@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom"; // Import Link
+import { Link } from "react-router-dom";
 import { GetApprovedPosts } from "../../Managers/PostManager";
 import Post from "./Post";
 
@@ -12,9 +12,6 @@ export default function PostList() {
 
   const callGetPosts = async () => {
     const posts = await GetApprovedPosts();
-    
-  
-    
     setPosts(posts);
   };
 
@@ -55,7 +52,7 @@ export default function PostList() {
               posts.map((post) => {
                 return (
                   <tr key={post.id}>
-                    <Post post={post} />
+                    <Post post={post} showActions={false} />
                   </tr>
                 );
               })}
