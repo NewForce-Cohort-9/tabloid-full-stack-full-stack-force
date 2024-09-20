@@ -74,6 +74,7 @@ export const CommentForm = () => {
         />
       </div>
       <button type="submit" >{commentBeingEdited ? "Save Changes" : "Add Comment"}</button>
+      <button onClick={() => navigate(`/posts/${postId}/comments`)} className="btn btn-secondary">Cancel</button>
     </form>
   );
 };
