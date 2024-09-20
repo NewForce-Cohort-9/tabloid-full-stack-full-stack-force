@@ -1,12 +1,28 @@
-import React, { useState } from "react";
+//Comment form manages add and edit
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate  } from "react-router-dom";
-import { addComment } from "../../Managers/CommentManager";
+import { addComment, editComment, getCommentById } from "../../Managers/CommentManager";
 
 export const CommentForm = () => {
-  const { postId } = useParams(); //get postId from URL 
+  const { postId, commentId } = useParams(); //get postId from URL 
   const [subject, setSubject] = useState("");
   const [content, setContent] = useState("");
+  const [commentBeingEdited, setCommentBeingEdited] = useState(false);
   const navigate= useNavigate();
+
+  //for edit:
+  useEffect(() => {
+    if (commentId) {
+      //fetch comment for edit
+      getCommentById(commentId).then(comment => {
+        setSubject(comment.subject);
+        setContent(comment.content);
+        setCommentBeingEdited(true);
+      }).catch(() => {
+        navigate(`/posts/${postId}/comments`);
+      });
+    }
+  }, [commentId, navigate, postId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,16 +35,23 @@ export const CommentForm = () => {
       return;
     }
 
-    const newComment = {
+    const comment = {
+      id: commentId, 
       subject,
       content,
       postId,
       userProfileId: userProfile.id,
     };
 
-    await addComment(newComment);
-    //go back to comments after save/submit
-    navigate(`/posts/${postId}/comments`);
+    if (commentBeingEdited) {
+      // Edit
+      await editComment(commentId, { ...comment }); 
+    } else {
+      // Add
+      await addComment(comment);
+    }
+
+    navigate(`/posts/${postId}/comments`); //Go back to comments
   };
 
   return (
@@ -50,7 +73,7 @@ export const CommentForm = () => {
           required
         />
       </div>
-      <button type="submit" >Save</button>
+      <button type="submit" >{commentBeingEdited ? "Save Changes" : "Add Comment"}</button>
     </form>
   );
 };
