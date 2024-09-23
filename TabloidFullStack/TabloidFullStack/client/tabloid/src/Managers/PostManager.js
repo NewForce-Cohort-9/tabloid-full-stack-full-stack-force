@@ -48,9 +48,18 @@ export const updatePost = (post) => {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(post)
-    }).then(res => res.ok ? res.json() : Promise.reject("Failed to update post"));
+    })
+    .then(res => {
+        if (!res.ok) {
+            return res.json().then(errorData => {
+                console.error('Error:', res.status, errorData);
+                throw new Error('Failed to update post');
+            });
+        }
+        // Handle if the response doesn't return JSON
+        return res.text().then(text => text ? JSON.parse(text) : {});
+    });
 };
-
 
 export const getPostsByCategory = (categoryId) => {
     return fetch(`${apiUrl}/api/Post/category/${categoryId}`).then(res => res.json())

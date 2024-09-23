@@ -7,12 +7,11 @@ namespace TabloidFullStack.Repositories
 {
     public class PostRepository : BaseRepository, IPostRepository
     {
-        // Constructor to pass configuration to the base class
         public PostRepository(IConfiguration config) : base(config) { }
 
         public List<Post> GetApprovedPosts()
         {
-            using (var conn = Connection)  // Now using the BaseRepository's Connection property
+            using (var conn = Connection)
             {
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
@@ -57,6 +56,7 @@ namespace TabloidFullStack.Repositories
                 }
             }
         }
+
         public List<Post> GetPostsByUser(int userId)
         {
             using (var conn = Connection)
@@ -65,13 +65,13 @@ namespace TabloidFullStack.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                SELECT p.Id, p.Title, p.Content, p.CreateDateTime, p.PublishDateTime, p.IsApproved,
-                       p.CategoryId, c.Name as CategoryName, u.DisplayName as Author
-                FROM Post p
-                JOIN UserProfile u ON p.UserProfileId = u.Id
-                JOIN Category c ON p.CategoryId = c.Id
-                WHERE p.UserProfileId = @userId
-                ORDER BY p.CreateDateTime DESC";
+                        SELECT p.Id, p.Title, p.Content, p.CreateDateTime, p.PublishDateTime, p.IsApproved,
+                               p.CategoryId, c.Name as CategoryName, u.DisplayName as Author
+                        FROM Post p
+                        JOIN UserProfile u ON p.UserProfileId = u.Id
+                        JOIN Category c ON p.CategoryId = c.Id
+                        WHERE p.UserProfileId = @userId
+                        ORDER BY p.CreateDateTime DESC";
 
                     cmd.Parameters.AddWithValue("@userId", userId);
 
@@ -114,12 +114,12 @@ namespace TabloidFullStack.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                SELECT p.Id, p.Title, p.Content, p.ImageLocation, p.CreateDateTime, p.PublishDateTime, p.IsApproved,
-                       c.Name AS CategoryName, u.DisplayName AS Author
-                FROM Post p
-                JOIN Category c ON p.CategoryId = c.Id
-                JOIN UserProfile u ON p.UserProfileId = u.Id
-                WHERE p.Id = @postId";
+                        SELECT p.Id, p.Title, p.Content, p.ImageLocation, p.CreateDateTime, p.PublishDateTime, p.IsApproved,
+                               c.Name AS CategoryName, u.DisplayName AS Author
+                        FROM Post p
+                        JOIN Category c ON p.CategoryId = c.Id
+                        JOIN UserProfile u ON p.UserProfileId = u.Id
+                        WHERE p.Id = @postId";
 
                     cmd.Parameters.AddWithValue("@postId", postId);
 
@@ -192,25 +192,19 @@ namespace TabloidFullStack.Repositories
             }
         }
 
-<<<<<<< HEAD
         public void UpdatePost(Post post)
         {
-=======
-        public List<Post> GetByCategoryId(int categoryId)
-        { 
->>>>>>> main
             using (var conn = Connection)
             {
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-<<<<<<< HEAD
                     cmd.CommandText = @"
-                UPDATE Post
-                SET Title = @Title,
-                    Content = @Content,
-                    CategoryId = @CategoryId
-                WHERE Id = @Id";
+                        UPDATE Post
+                        SET Title = @Title,
+                            Content = @Content,
+                            CategoryId = @CategoryId
+                        WHERE Id = @Id";
 
                     cmd.Parameters.AddWithValue("@Id", post.Id);
                     cmd.Parameters.AddWithValue("@Title", post.Title);
@@ -218,14 +212,26 @@ namespace TabloidFullStack.Repositories
                     cmd.Parameters.AddWithValue("@CategoryId", post.CategoryId);
 
                     cmd.ExecuteNonQuery();
-=======
-                    cmd.CommandText = @"SELECT p.Id, p.Title, p.Content, p.CreateDateTime, p.PublishDateTime, p.IsApproved,
-                       p.CategoryId, c.Name as CategoryName, u.DisplayName as Author
-                FROM Post p
-                JOIN UserProfile u ON p.UserProfileId = u.Id
-                JOIN Category c ON p.CategoryId = c.Id
-                WHERE p.CategoryId = @categoryId
-                ORDER BY p.CreateDateTime DESC";
+                }
+            }
+        }
+
+        public List<Post> GetByCategoryId(int categoryId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT p.Id, p.Title, p.Content, p.CreateDateTime, p.PublishDateTime, p.IsApproved,
+                               p.CategoryId, c.Name as CategoryName, u.DisplayName as Author
+                        FROM Post p
+                        JOIN UserProfile u ON p.UserProfileId = u.Id
+                        JOIN Category c ON p.CategoryId = c.Id
+                        WHERE p.CategoryId = @categoryId
+                        ORDER BY p.CreateDateTime DESC";
+
                     cmd.Parameters.AddWithValue("@categoryId", categoryId);
 
                     var reader = cmd.ExecuteReader();
@@ -255,11 +261,8 @@ namespace TabloidFullStack.Repositories
 
                     reader.Close();
                     return posts;
->>>>>>> main
                 }
             }
         }
-
-
     }
 }
