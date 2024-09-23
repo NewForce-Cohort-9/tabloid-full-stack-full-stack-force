@@ -39,3 +39,14 @@ export const deletePost = (id) => {
         method: "DELETE",
     });
 };
+
+export const updatePost = (post) => {
+    return fetch(`${apiUrl}/api/post/${post.id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(post)
+    }).then(res => res.ok ? res.json() : Promise.reject("Failed to update post"));
+};
+
