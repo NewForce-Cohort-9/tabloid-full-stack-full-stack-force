@@ -41,18 +41,6 @@ export const deletePost = (id) => {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 export const updatePost = (post) => {
     return fetch(`${apiUrl}/api/post/${post.id}`, {
         method: "PUT",
@@ -63,3 +51,7 @@ export const updatePost = (post) => {
     }).then(res => res.ok ? res.json() : Promise.reject("Failed to update post"));
 };
 
+
+export const getPostsByCategory = (categoryId) => {
+    return fetch(`${apiUrl}/api/Post/category/${categoryId}`).then(res => res.json())
+}
