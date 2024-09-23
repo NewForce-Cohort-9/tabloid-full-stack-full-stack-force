@@ -39,3 +39,7 @@ export const deletePost = (id) => {
         method: "DELETE",
     });
 };
+
+export const getPostsByCategory = (categoryId) => {
+    return fetch(`${apiUrl}/api/Post/category/${categoryId}`).then(res => res.json())
+}
