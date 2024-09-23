@@ -18,6 +18,7 @@ import PostForm from "./Post/PostForm";
 import UserProfileList from "./UserProfiles/UserProfileList";
 import UserProfile from "./UserProfiles/UserProfile";
 import Header from "./Header";
+import EditPostForm from "./Post/EditPostForm.js";
 
 export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
   return (
@@ -46,6 +47,7 @@ export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
         <Route path="/myposts" element={<MyPosts />} />
         <Route path="/posts/create" element={<PostForm />} />
         <Route path="/posts/:id" element={<PostDetail />} />
+        <Route path="/posts/edit/:postId" element={<EditPostForm />} />
         <Route path="/posts/:postId/comments" element={<CommentList />} />
         <Route path="/posts/:postId/comments/add" element={<CommentForm />} />
         <Route path="/posts/:postId/comments/delete/:commentId" element={<DeleteComment />}/>
