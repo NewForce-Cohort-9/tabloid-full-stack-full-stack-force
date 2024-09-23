@@ -40,6 +40,19 @@ export const deletePost = (id) => {
     });
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const updatePost = (post) => {
     return fetch(`${apiUrl}/api/post/${post.id}`, {
         method: "PUT",
