@@ -39,6 +39,13 @@ namespace TabloidFullStack.Controllers
             return Ok(post);
         }
 
+        [HttpGet("category/{categoryId}")]
+        public IActionResult GetByCategory(int categoryId)
+        {
+            var posts = _postRepository.GetByCategoryId(categoryId);
+            return Ok(posts);
+        }
+
         [HttpPost]
         public IActionResult Post(Post post)
         {
