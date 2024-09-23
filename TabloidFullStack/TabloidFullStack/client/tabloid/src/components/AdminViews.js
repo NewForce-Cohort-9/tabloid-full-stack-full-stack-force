@@ -18,6 +18,7 @@ import PostForm from "./Post/PostForm";
 import UserProfileList from "./UserProfiles/UserProfileList";
 import UserProfile from "./UserProfiles/UserProfile";
 import Header from "./Header";
+import UserProfileConfirm from "./UserProfiles/UserProfileConfirm";
 
 export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
   return (
@@ -48,11 +49,25 @@ export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
         <Route path="/posts/:id" element={<PostDetail />} />
         <Route path="/posts/:postId/comments" element={<CommentList />} />
         <Route path="/posts/:postId/comments/add" element={<CommentForm />} />
-        <Route path="/posts/:postId/comments/delete/:commentId" element={<DeleteComment />}/>
-        <Route path="/posts/:postId/comments/edit/:commentId" element={<CommentForm />}/>
+        <Route
+          path="/posts/:postId/comments/delete/:commentId"
+          element={<DeleteComment />}
+        />
+        <Route
+          path="/posts/:postId/comments/edit/:commentId"
+          element={<CommentForm />}
+        />
 
         <Route path="/profiles" element={<UserProfileList />} />
         <Route path="/profile/:id" element={<UserProfile />} />
+        <Route
+          path="/profile/deactivate/:id"
+          element={<UserProfileConfirm />}
+        />
+        <Route
+          path="/profile/reactivate/:id"
+          element={<UserProfileConfirm />}
+        />
       </Route>
     </Routes>
   );
