@@ -1,10 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { GetApprovedPosts } from "../../Managers/PostManager";
+import {
+  GetApprovedPosts,
+  getPostsByCategory,
+} from "../../Managers/PostManager";
 import Post from "./Post";
+import { GetAllCategories } from "../../Managers/CategoryManager";
 
 export default function PostList() {
   const [posts, setPosts] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    GetAllCategories().then((data) => setCategories(data));
+  }, []);
+  useEffect(() => {
+
+  })
 
   useEffect(() => {
     callGetPosts();
@@ -14,6 +26,17 @@ export default function PostList() {
     const posts = await GetApprovedPosts();
     setPosts(posts);
   };
+  const postsByCategory = async (id) => {
+    if (id > 0)
+    {
+      const posts = await getPostsByCategory(id);
+      setPosts(posts)
+    }
+    else
+    {
+      callGetPosts()
+    }
+  }
 
   return (
     <>
@@ -30,6 +53,18 @@ export default function PostList() {
       <div className="container pt-5">
         <div className="container d-flex align-items-center justify-content-between w-full">
           <h1>All Posts</h1>
+          <div className="dropdown">
+            <select className="btn btn-primary" onChange={(event) => {return postsByCategory(parseInt(event.target.value))}}>
+              <option value="0">Filter by Category</option>
+              {categories.map((category) => {
+                return(
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                )
+              })}
+            </select>
+          </div>
           <Link to="/posts/create">
             <button className="btn btn-outline-primary mx-1 text-primary">
               Create New Post

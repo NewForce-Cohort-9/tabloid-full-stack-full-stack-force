@@ -6,6 +6,7 @@ namespace TabloidFullStack.Repositories
     {
         List<Post> GetApprovedPosts();
         List<Post> GetPostsByUser(int userId);
+        List<Post> GetByCategoryId(int categoryId);
 
         Post GetPostById(int categoryId);
 
