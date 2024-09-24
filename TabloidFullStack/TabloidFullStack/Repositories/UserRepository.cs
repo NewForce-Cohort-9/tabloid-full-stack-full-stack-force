@@ -18,7 +18,7 @@ namespace TabloidFullStack.Repositories
                         SELECT 
                             up.Id, up.DisplayName, up.FirstName, up.LastName,
 	                        up.Email, up.CreateDateTime, up.ImageLocation,up.UserTypeId,
-                            ut.Name AS UserTypeName 
+                            up.IsDeactivated, ut.Name AS UserTypeName 
                         FROM UserProfile up
                         JOIN UserType ut ON up.UserTypeId = ut.Id
                         ORDER BY DisplayName";
@@ -40,6 +40,7 @@ namespace TabloidFullStack.Repositories
                             CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
                             ImageLocation = reader.GetString(reader.GetOrdinal("ImageLocation")),
                             UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
+                            IsDeactivated = reader.GetBoolean(reader.GetOrdinal("IsDeactivated")),
                             UserType = new UserType()
                             {
                                 Id = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
@@ -64,7 +65,7 @@ namespace TabloidFullStack.Repositories
                     cmd.CommandText = @"
                         SELECT up.Id, up.FirstName, up.LastName, up.DisplayName, 
                                up.Email, up.CreateDateTime, up.ImageLocation, up.UserTypeId,
-                               ut.Name AS UserTypeName
+                               up.IsDeactivated, ut.Name AS UserTypeName
                           FROM UserProfile up
                                LEFT JOIN UserType ut on up.UserTypeId = ut.Id
                          WHERE up.Id = @Id";
@@ -86,6 +87,7 @@ namespace TabloidFullStack.Repositories
                             CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
                             ImageLocation = reader.GetString(reader.GetOrdinal("ImageLocation")),
                             UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
+                            IsDeactivated = reader.GetBoolean(reader.GetOrdinal("IsDeactivated")),
                             UserType = new UserType()
                             {
                                 Id = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
@@ -110,7 +112,7 @@ namespace TabloidFullStack.Repositories
                     cmd.CommandText = @"
                         SELECT up.Id, up.FirstName, up.LastName, up.DisplayName, 
                                up.Email, up.CreateDateTime, up.ImageLocation, up.UserTypeId,
-                               ut.Name AS UserTypeName
+                               up.IsDeactivated, ut.Name AS UserTypeName
                           FROM UserProfile up
                                LEFT JOIN UserType ut on up.UserTypeId = ut.Id
                          WHERE Email = @email";
@@ -132,11 +134,14 @@ namespace TabloidFullStack.Repositories
                             CreateDateTime = DbUtils.GetDateTime(reader, "CreateDateTime"),
                             ImageLocation = DbUtils.GetString(reader, "ImageLocation"),
                             UserTypeId = DbUtils.GetInt(reader, "UserTypeId"),
+                            IsDeactivated = reader.GetBoolean(reader.GetOrdinal("IsDeactivated")),
                             UserType = new UserType()
                             {
                                 Id = DbUtils.GetInt(reader, "UserTypeId"),
                                 Name = DbUtils.GetString(reader, "UserTypeName"),
                             }
+                            
+                            
                         };
                     }
                     reader.Close();
@@ -167,6 +172,40 @@ namespace TabloidFullStack.Repositories
                     DbUtils.AddParameter(cmd, "@UserTypeId", userProfile.UserTypeId);
 
                     userProfile.Id = (int)cmd.ExecuteScalar();
+                }
+            }
+        }
+
+        public void Update(UserProfile userProfile) { 
+        
+        using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        UPDATE UserProfile
+                            SET FirstName = @FirstName,
+                                LastName = @LastName,
+                                DisplayName = @DisplayName,
+                                Email = @Email,
+                                CreateDateTime = @CreateDateTime,
+                                ImageLocation = @ImageLocation,
+                                UserTypeId = @UserTypeId,
+                                IsDeactivated = @IsDeactivated
+                        WHERE Id = @Id";
+
+                    DbUtils.AddParameter(cmd, "@Id", userProfile.Id); 
+                    DbUtils.AddParameter(cmd, "@FirstName", userProfile.FirstName);
+                    DbUtils.AddParameter(cmd, "@LastName", userProfile.LastName);
+                    DbUtils.AddParameter(cmd, "@DisplayName", userProfile.DisplayName);
+                    DbUtils.AddParameter(cmd, "@Email", userProfile.Email);
+                    DbUtils.AddParameter(cmd, "@CreateDateTime", userProfile.CreateDateTime);
+                    DbUtils.AddParameter(cmd, "@ImageLocation", userProfile.ImageLocation);
+                    DbUtils.AddParameter(cmd, "@UserTypeId", userProfile.UserTypeId);
+                    DbUtils.AddParameter(cmd, "@IsDeactivated", userProfile.IsDeactivated); 
+
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
