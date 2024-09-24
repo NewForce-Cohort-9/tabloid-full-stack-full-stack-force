@@ -62,5 +62,18 @@ namespace TabloidFullStack.Controllers
             return NoContent();
         }
 
+        [HttpPut("{id}")]
+        public IActionResult UpdatePost(int id, Post post)
+        {
+            if (id != post.Id)
+            {
+                return BadRequest();
+            }
+
+            _postRepository.UpdatePost(post);
+
+            return NoContent();
+        }
+
     }
 }
