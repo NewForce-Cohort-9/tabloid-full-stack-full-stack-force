@@ -33,7 +33,7 @@ export default function UserProfile() {
           <div className="col-lg-4">
             <div className="card mb-4">
               <div className="card-body text-center">
-              {profile.imageLocation ? (
+              {profile.imageLocation? (
                 <img
                 src={`https://localhost:5001/${profile.imageLocation}`}
                   alt="avatar"

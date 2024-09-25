@@ -61,8 +61,9 @@ namespace TabloidFullStack.Controllers
                 userProfile);
         }
 
+        //check https://localhost:5001/uploads/dog.png
         [HttpPost("upload")]
-        public IActionResult UploadAvatar(IFormFile file, int userId) 
+        public IActionResult UploadProfileImage(IFormFile file, int userId) 
         {
             if (file == null || file.Length == 0)
             {
