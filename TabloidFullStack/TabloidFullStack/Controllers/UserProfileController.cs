@@ -59,5 +59,14 @@ namespace TabloidFullStack.Controllers
                 new { email = userProfile.Email },
                 userProfile);
         }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, UserProfile userProfile)
+        {
+            if (id != userProfile.Id) return BadRequest();
+
+            _userRepository.Update(userProfile);
+            return NoContent(); 
+        }
     }
 }
