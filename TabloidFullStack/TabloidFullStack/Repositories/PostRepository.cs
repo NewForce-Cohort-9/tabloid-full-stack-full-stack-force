@@ -239,6 +239,55 @@ namespace TabloidFullStack.Repositories
             }
         }
 
+        public List<Post> GetByTagId(int tagId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT p.Id, p.Title, p.Content, p.CreateDateTime, p.PublishDateTime, p.IsApproved,
+                       p.CategoryId, c.Name as CategoryName, t.Name as TagName, u.DisplayName as Author
+                FROM Post p
+                JOIN UserProfile u ON p.UserProfileId = u.Id
+                JOIN Category c ON p.CategoryId = c.Id
+                JOIN PostTag pt ON p.Id = pt.PostId
+                JOIN Tag t ON t.Id= pt.TagId
+                WHERE pt.TagId = @tagId
+                ORDER BY p.CreateDateTime DESC";
+                    cmd.Parameters.AddWithValue("@tagId", tagId);
+
+                    var reader = cmd.ExecuteReader();
+                    var posts = new List<Post>();
+
+                    while (reader.Read())
+                    {
+                        posts.Add(new Post
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Title = reader.GetString(reader.GetOrdinal("Title")),
+                            Content = reader.GetString(reader.GetOrdinal("Content")),
+                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                            PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
+                            IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
+                            Category = new Category
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("CategoryId")),
+                                Name = reader.GetString(reader.GetOrdinal("CategoryName"))
+                            },
+                            Author = new UserProfile
+                            {
+                                DisplayName = reader.GetString(reader.GetOrdinal("Author"))
+                            }
+                        });
+                    }
+
+                    reader.Close();
+                    return posts;
+                }
+            }
+        }
+
 
     }
 }

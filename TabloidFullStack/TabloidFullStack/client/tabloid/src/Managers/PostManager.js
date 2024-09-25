@@ -43,3 +43,7 @@ export const deletePost = (id) => {
 export const getPostsByCategory = (categoryId) => {
     return fetch(`${apiUrl}/api/Post/category/${categoryId}`).then(res => res.json())
 }
+
+export const getPostsByTag = (tagId) => {
+    return fetch(`${apiUrl}/api/Post/tag/${tagId}`).then(res => res.json())
+}
