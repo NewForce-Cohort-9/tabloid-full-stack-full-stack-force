@@ -14,6 +14,9 @@ namespace TabloidFullStack.Repositories
 
         void DeletePost(int postId);
 
+        List<Post> GetByTagId(int tagId);
+
         void UpdatePost(Post post);
+
     }
 }
