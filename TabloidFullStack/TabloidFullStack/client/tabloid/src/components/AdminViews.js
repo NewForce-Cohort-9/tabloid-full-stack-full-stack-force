@@ -21,7 +21,7 @@ import Header from "./Header";
 import UserProfileConfirm from "./UserProfiles/UserProfileConfirm";
 import UserProfileEdit from "./UserProfiles/UserProfileEdit.js";
 import EditPostForm from "./Post/EditPostForm.js";
-import  HomePage  from "./Homepage.js";
+import  HomePage  from "./HomePage.js";
 
 export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
   return (

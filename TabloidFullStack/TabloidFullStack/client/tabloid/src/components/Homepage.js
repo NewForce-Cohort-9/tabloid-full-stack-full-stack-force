@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { getPostsBySubscribedAuthors } from "../Managers/SubscriptionManager";
 
 const HomePage = () => {
@@ -7,7 +7,7 @@ const HomePage = () => {
 
   useEffect(() => {
     if (userProfile) {
-      getPostsBySubscribedAuthors(userProfile.id).then(setPosts);
+      getPostsBySubscribedAuthors(userProfile.id).then(setPosts).catch(err => console.error(err));
     }
   }, [userProfile]);
 

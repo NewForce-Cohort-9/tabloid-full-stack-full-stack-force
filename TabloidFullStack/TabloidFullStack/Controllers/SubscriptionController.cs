@@ -29,17 +29,18 @@ public class SubscriptionController : ControllerBase
         }
     }
 
-    [HttpGet("subscriptions/{subscriberId}")]
+    [HttpGet("subscriptions/{subscriberId}/posts")]
     public IActionResult GetPostsBySubscribedAuthors(int subscriberId)
     {
         try
         {
-            var posts = _postRepository.GetPostsBySubscribedAuthors(subscriberId);
+            var posts = _subscriptionRepository.GetPostsBySubscribedAuthors(subscriberId);
             return Ok(posts);
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex.Message);
+            return StatusCode(500, new { message = ex.Message });
         }
     }
+
 }
