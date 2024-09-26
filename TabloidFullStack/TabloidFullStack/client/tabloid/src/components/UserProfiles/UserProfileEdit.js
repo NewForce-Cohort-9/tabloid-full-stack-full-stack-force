@@ -18,35 +18,48 @@ export default function UserProfileEdit() {
   ]);
 
   const { id: profileId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (profileId) callGetUserProfile();
   }, [profileId]);
 
-  const onUserTypeChange = (e) => {
-    console.log("t", e.target.value);
-  };
-
   const callGetUserProfile = async () => {
     const profile = await getByProfileId(profileId);
-    const selectedUserType = userTypeOptions
-      .map((option) => ({
-        ...option,
-        selected: option.id === profile?.userType?.id,
-      }))
-      .sort((a, b) => b.selected - a.selected);
+    const currentUserTypeId = profile?.userType?.id ?? 2;
+    const priorSelection = selectUserType(currentUserTypeId);
 
+    const selectedFirst = priorSelection.sort(
+      (a, b) => b.selected - a.selected
+    );
     setProfile(profile);
-    setUserTypeOptions(selectedUserType);
+    setUserTypeOptions(selectedFirst);
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
+    const selection = userTypeOptions.find((item) => item.selected);
+
+    await updateProfile({ ...profile, userTypeId: selection.id });
+    navigate("/profiles");
+  };
+
+  const selectUserType = (userTypeId) => {
+    const selection = userTypeOptions.map((option) => ({
+      ...option,
+      selected: option.id === userTypeId,
+    }));
+    return selection;
+  };
+
+  const onUserTypeSelect = (e) => {
+    const selection = selectUserType(Number(e.target.value));
+    setUserTypeOptions(selection);
   };
 
   return (
     <>
-      <TagPageHeader title="Edit User Profile" />
+      <TagPageHeader title={`Editing user profile: ${profile?.displayName}`} />
       <div className="container pt-5">
         <div className="container d-flex align-items-center justify-content-center flex-column">
           <form>
@@ -54,15 +67,15 @@ export default function UserProfileEdit() {
 
             <div className="d-flex justify-content-center">
               <select
-                onChange={onUserTypeChange}
+                onChange={onUserTypeSelect}
                 style={{ height: "2.5rem" }}
                 className="w-100 mh-100 d-flex text-capitalize"
               >
-                {userTypeOptions.map((option, index) => {
+                {userTypeOptions.map((option) => {
                   return (
                     <option
                       className="text-capitalize"
-                      key={index}
+                      key={option.id}
                       value={option.id}
                     >
                       {option.name}
