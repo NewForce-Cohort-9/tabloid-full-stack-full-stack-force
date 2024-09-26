@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllProfiles } from "../../Managers/UserProfileManager";
+import { EditPencil } from "../Icons";
 
 const ProfileListItem = ({ profile }) => {
   const navigate = useNavigate();
@@ -14,6 +15,12 @@ const ProfileListItem = ({ profile }) => {
         {profile.firstName} {profile.lastName}
       </td>
       <td>{profile.userType.name}</td>
+      <td
+        onClick={() => navigate(`/profile/edit/${profile.id}`)}
+        className="btn btn-success"
+      >
+        Edit
+      </td>
       {profile.isDeactivated ? (
         <td
           onClick={() => navigate(`/profile/reactivate/${profile.id}`)}
