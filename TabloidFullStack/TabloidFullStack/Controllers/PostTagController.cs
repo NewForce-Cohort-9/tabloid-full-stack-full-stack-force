@@ -23,10 +23,11 @@ namespace TabloidFullStack.Controllers
         }
 
         // GET api/<PostTagController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{postId}")]
+        public IActionResult GetPostTagsByPost(int postId)
         {
-            return "value";
+            var postTags = _postTagRepository.GetPostTagsByPostId(postId);
+            return Ok(postTags);
         }
 
         // POST api/<PostTagController>
@@ -45,8 +46,10 @@ namespace TabloidFullStack.Controllers
 
         // DELETE api/<PostTagController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            _postTagRepository.DeletePostTag(id);
+            return NoContent();
         }
     }
 }
