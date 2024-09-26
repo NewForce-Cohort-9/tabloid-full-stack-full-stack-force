@@ -17,6 +17,7 @@ namespace TabloidFullStack
             builder.Services.AddTransient<ITagRepository, TagRepository>(); 
             builder.Services.AddTransient<IPostRepository, PostRepository>();
             builder.Services.AddTransient<ICommentRepository, CommentRepository>();
+            builder.Services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
             builder.Services.AddTransient<IPostTagRepository, PostTagRepository>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
