@@ -27,5 +27,20 @@ public class SubscriptionController : ControllerBase
         {
             return StatusCode(500, new { message = ex.Message });
         }
+
+        [HttpGet("subscriptions/{subscriberId}")]
+        public IActionResult GetPostsBySubscribedAuthors(int subscriberId)
+        {
+            try
+            {
+                var posts = _postRepository.GetPostsBySubscribedAuthors(subscriberId);
+                return Ok(posts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
     }
 }

@@ -14,3 +14,8 @@ export const addSubscription = (subscriberId, providerId) => {
       });
     });
   };
+
+  export const getPostsBySubscribedAuthors = (userId) => {
+    return fetch(`/api/post/subscriptions/${userId}`)
+        .then(res => res.json());
+};
