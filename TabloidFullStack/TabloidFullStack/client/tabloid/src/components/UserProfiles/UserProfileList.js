@@ -38,7 +38,6 @@ const ProfileListItem = ({ profile }) => {
 
 export default function UserProfileList() {
   const [profiles, setProfiles] = useState([]);
-
   const [isFiltering, setIsFiltering] = useState(true);
 
   useEffect(() => {
@@ -66,7 +65,7 @@ export default function UserProfileList() {
     <div className="container pt-5">
       <div className="container d-flex align-items-center justify-content-between">
         <h1>All User Profiles</h1>
-        <span onClick={filterDeactivated} className="btn btn-success">
+        <span onClick={filterDeactivated} className="btn btn-primary">
           {isFiltering ? "View Deactivated" : "View All"}
         </span>
       </div>
