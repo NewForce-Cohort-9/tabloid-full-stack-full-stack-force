@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { GetAllCategories } from '../../Managers/CategoryManager';
 import { addPost } from '../../Managers/PostManager';
 import { getUserProfileById } from '../../Managers/UserProfileManager';
+import { getAllTags } from '../../Managers/TagManager';
+import { addPostTag } from '../../Managers/PostTagManager';
 
 export default function PostForm() {
     const [post, setPost] = useState({
@@ -14,13 +16,17 @@ export default function PostForm() {
     });
 
     const [categories, setCategories] = useState([]);
+    const [tags, setTags] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
     const navigate = useNavigate();
 
     // Fetch categories for the dropdown
     useEffect(() => {
         GetAllCategories().then(setCategories);
     }, []);
-
+    useEffect(() => {
+        getAllTags().then(setTags)
+    }, [])
     // Fetch full user profile from API
     useEffect(() => {
         const localProfile = JSON.parse(localStorage.getItem("userProfile"));
@@ -80,6 +86,19 @@ export default function PostForm() {
         };
 
         addPost(newPost)
+        .then((data) => {
+            if(data) {
+                {
+                    selectedTags.map((tag) => {
+                        const newPostTag = {
+                            PostId: data,
+                            TagId: tag
+                        };
+                        addPostTag(newPostTag);
+                    })
+                }
+            }
+        })
             .then(() => navigate(`/posts`)) 
             .catch((err) => console.error("Failed to add post:", err));
     };
@@ -136,6 +155,31 @@ export default function PostForm() {
                     value={post.publishDateTime} 
                     onChange={handleChange} 
                 />
+            </fieldset>
+            <fieldset>
+            <div>
+              <p>Select Tags: </p>
+              {tags.map((tag) => {
+                return (
+                  <div className="item-tags">
+                    <input
+                      type="checkbox"
+                      key={tag.id}
+                      id={tag.id}
+                      value={tag.id}
+                      onClick={(event) => {
+                        
+                          selectedTags.push(parseInt(event.target.value))
+                          
+
+                        console.log(selectedTags);
+                      }}
+                    ></input>
+                    <label>{tag.name}</label>
+                  </div>
+                );
+              })}
+            </div>
             </fieldset>
             <button type="submit">Save Post</button>
         </form>

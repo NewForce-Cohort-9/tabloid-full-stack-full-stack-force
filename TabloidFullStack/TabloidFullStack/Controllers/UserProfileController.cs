@@ -61,6 +61,7 @@ namespace TabloidFullStack.Controllers
                 userProfile);
         }
 
+
         //check https://localhost:5001/uploads/dog.png
         [HttpPost("upload")]
         public IActionResult UploadProfileImage(IFormFile file, int userId) 
@@ -88,6 +89,16 @@ namespace TabloidFullStack.Controllers
             return Ok(new { FilePath = filePath });
         }
 
+
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, UserProfile userProfile)
+        {
+            if (id != userProfile.Id) return BadRequest();
+
+            _userRepository.Update(userProfile);
+            return NoContent(); 
+        }
 
     }
 }

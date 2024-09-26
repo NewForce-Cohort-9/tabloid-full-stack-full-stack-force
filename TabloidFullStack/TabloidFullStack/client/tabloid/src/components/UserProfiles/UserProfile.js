@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { getByProfileId } from "../../Managers/UserProfileManager";
 import UserProfileImage from "./UserProfileImage";
 
@@ -33,12 +33,12 @@ export default function UserProfile() {
           <div className="col-lg-4">
             <div className="card mb-4">
               <div className="card-body text-center">
-              {profile.imageLocation? (
+              {profile.imageLocation ? (
                 <img
-                src={`https://localhost:5001/${profile.imageLocation}`}
+                  src={`https://localhost:5001/${profile.imageLocation}`}
                   alt="avatar"
                   className="rounded-circle img-fluid"
-                  style={{ width: "150px" }}
+                  style={{ width: "150px", height: "150px" }}
                 />
               ) : (
                 <img
@@ -59,9 +59,23 @@ export default function UserProfile() {
                 </p>
                 <p className="text-muted mb-4">{profile.email}</p>
                 <div className="d-flex justify-content-center mb-2">
-                  <button type="button" className="btn btn-danger">
-                    Deactivate
-                  </button>
+                  {profile.isDeactivated ? (
+                    <Link
+                      to={`/profile/reactivate/${profile.id}`}
+                      type="button"
+                      className="btn btn-success"
+                    >
+                      Reactivate
+                    </Link>
+                  ) : (
+                    <Link
+                      to={`/profile/deactivate/${profile.id}`}
+                      type="button"
+                      className="btn btn-danger"
+                    >
+                      Deactivate
+                    </Link>
+                  )}
                   <button
                     type="button"
                     className="btn btn-outline-primary ms-1"
