@@ -19,6 +19,7 @@ import UserProfileList from "./UserProfiles/UserProfileList";
 import UserProfile from "./UserProfiles/UserProfile";
 import Header from "./Header";
 import UserProfileConfirm from "./UserProfiles/UserProfileConfirm";
+import UserProfileEdit from "./UserProfiles/UserProfileEdit.js";
 import EditPostForm from "./Post/EditPostForm.js";
 import  HomePage  from "./Homepage.js";
 
@@ -73,6 +74,7 @@ export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
           path="/profile/reactivate/:id"
           element={<UserProfileConfirm />}
         />
+        <Route path="/profile/edit/:id" element={<UserProfileEdit />} />
       </Route>
     </Routes>
   );
