@@ -114,12 +114,13 @@ namespace TabloidFullStack.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT p.Id, p.Title, p.Content, p.ImageLocation, p.CreateDateTime, p.PublishDateTime, p.IsApproved,
-                               c.Name AS CategoryName, u.DisplayName AS Author
-                        FROM Post p
-                        JOIN Category c ON p.CategoryId = c.Id
-                        JOIN UserProfile u ON p.UserProfileId = u.Id
-                        WHERE p.Id = @postId";
+                SELECT p.Id, p.Title, p.Content, p.ImageLocation, p.CreateDateTime, p.PublishDateTime, p.IsApproved,
+                       p.CategoryId, c.Name AS CategoryName,
+                       u.Id AS AuthorId, u.FirstName, u.LastName, u.DisplayName, u.Email, u.ImageLocation AS AuthorImage, u.UserTypeId
+                FROM Post p
+                JOIN Category c ON p.CategoryId = c.Id
+                JOIN UserProfile u ON p.UserProfileId = u.Id
+                WHERE p.Id = @postId";
 
                     cmd.Parameters.AddWithValue("@postId", postId);
 
@@ -140,9 +141,21 @@ namespace TabloidFullStack.Repositories
                             PublishDateTime = reader.IsDBNull(reader.GetOrdinal("PublishDateTime"))
                                 ? (DateTime?)null
                                 : reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
+                            IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
+                            Category = new Category
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("CategoryId")),
+                                Name = reader.GetString(reader.GetOrdinal("CategoryName"))
+                            },
                             Author = new UserProfile
                             {
-                                DisplayName = reader.GetString(reader.GetOrdinal("Author"))
+                                Id = reader.GetInt32(reader.GetOrdinal("AuthorId")),
+                                FirstName = reader.IsDBNull(reader.GetOrdinal("FirstName")) ? null : reader.GetString(reader.GetOrdinal("FirstName")),
+                                LastName = reader.IsDBNull(reader.GetOrdinal("LastName")) ? null : reader.GetString(reader.GetOrdinal("LastName")),
+                                DisplayName = reader.GetString(reader.GetOrdinal("DisplayName")),
+                                Email = reader.IsDBNull(reader.GetOrdinal("Email")) ? null : reader.GetString(reader.GetOrdinal("Email")),
+                                ImageLocation = reader.IsDBNull(reader.GetOrdinal("AuthorImage")) ? null : reader.GetString(reader.GetOrdinal("AuthorImage")),
+                                UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId"))
                             }
                         };
                     }
@@ -152,7 +165,6 @@ namespace TabloidFullStack.Repositories
                 }
             }
         }
-
         public void AddPost(Post post)
         {
             using (var conn = Connection)
