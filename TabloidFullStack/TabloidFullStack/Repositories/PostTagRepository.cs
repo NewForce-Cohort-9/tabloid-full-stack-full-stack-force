@@ -9,6 +9,32 @@ namespace TabloidFullStack.Repositories
     {
         public PostTagRepository(IConfiguration configuration) : base(configuration) { }
 
+        public List<PostTag> GetPostTagsByPostId(int postId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT Id, PostId, TagId FROM PostTag WHERE PostId = @postId";
+                    DbUtils.AddParameter(cmd, "@postId", postId);
+
+                    var reader = cmd.ExecuteReader();
+                    List<PostTag> postTags = new List<PostTag>();
+                    while (reader.Read())
+                    {
+                        postTags.Add(new PostTag()
+                        {
+                            Id = DbUtils.GetInt(reader, "Id"),
+                            PostId = postId,
+                            TagId = DbUtils.GetInt(reader, "TagId")
+                        });
+                    }
+                    reader.Close();
+                    return postTags;
+                }
+            }
+        }
         public void AddPostTag(PostTag postTag)
         {
             using (var conn = Connection)
