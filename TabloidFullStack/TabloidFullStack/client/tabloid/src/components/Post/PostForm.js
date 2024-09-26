@@ -14,6 +14,7 @@ export default function PostForm() {
     });
 
     const [categories, setCategories] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
     const navigate = useNavigate();
 
     // Fetch categories for the dropdown
@@ -80,6 +81,18 @@ export default function PostForm() {
         };
 
         addPost(newPost)
+        .then((data) => {
+            if(data) {
+                {
+                    selectedTags.map((tag) => {
+                        const newPostTag = {
+                            PostId: data,
+                            TagId: tag
+                        };
+                    })
+                }
+            }
+        })
             .then(() => navigate(`/posts`)) 
             .catch((err) => console.error("Failed to add post:", err));
     };
