@@ -28,7 +28,7 @@ namespace TabloidFullStack.Models
 
         [DataType(DataType.Url)]
         [MaxLength(255)]
-        public string ImageLocation { get; set; }
+        public string? ImageLocation { get; set; }
 
         [Required]
         public int? UserTypeId { get; set; }

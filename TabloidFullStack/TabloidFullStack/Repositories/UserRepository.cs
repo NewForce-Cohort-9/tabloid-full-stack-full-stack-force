@@ -1,4 +1,8 @@
-﻿using TabloidFullStack.Models;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using TabloidFullStack.Models;
 using TabloidFullStack.Utils;
 
 namespace TabloidFullStack.Repositories
@@ -12,12 +16,12 @@ namespace TabloidFullStack.Repositories
             using (var conn = Connection)
             {
                 conn.Open();
-                using (var cmd = conn.CreateCommand()) {
-
+                using (var cmd = conn.CreateCommand())
+                {
                     cmd.CommandText = @"
                         SELECT 
                             up.Id, up.DisplayName, up.FirstName, up.LastName,
-	                        up.Email, up.CreateDateTime, up.ImageLocation,up.UserTypeId,
+                            up.Email, up.CreateDateTime, up.ImageLocation, up.UserTypeId,
                             up.IsDeactivated, ut.Name AS UserTypeName 
                         FROM UserProfile up
                         JOIN UserType ut ON up.UserTypeId = ut.Id
@@ -25,11 +29,10 @@ namespace TabloidFullStack.Repositories
 
                     var reader = cmd.ExecuteReader();
 
-                    List<UserProfile> profiles = []; 
+                    List<UserProfile> profiles = new List<UserProfile>();
 
                     while (reader.Read())
                     {
-
                         profiles.Add(new UserProfile()
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
@@ -38,7 +41,7 @@ namespace TabloidFullStack.Repositories
                             LastName = reader.GetString(reader.GetOrdinal("LastName")),
                             Email = reader.GetString(reader.GetOrdinal("Email")),
                             CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
-                            ImageLocation = reader.GetString(reader.GetOrdinal("ImageLocation")),
+                            ImageLocation = GetString(reader, "ImageLocation"), // Handle NULL here
                             UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
                             IsDeactivated = reader.GetBoolean(reader.GetOrdinal("IsDeactivated")),
                             UserType = new UserType()
@@ -50,9 +53,8 @@ namespace TabloidFullStack.Repositories
                     }
                     reader.Close();
                     return profiles;
-                 }
-                
-             }
+                }
+            }
         }
 
         public UserProfile GetById(int id)
@@ -85,7 +87,7 @@ namespace TabloidFullStack.Repositories
                             LastName = reader.GetString(reader.GetOrdinal("LastName")),
                             Email = reader.GetString(reader.GetOrdinal("Email")),
                             CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
-                            ImageLocation = reader.GetString(reader.GetOrdinal("ImageLocation")),
+                            ImageLocation = GetString(reader, "ImageLocation"), // Handle NULL here
                             UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
                             IsDeactivated = reader.GetBoolean(reader.GetOrdinal("IsDeactivated")),
                             UserType = new UserType()
@@ -132,7 +134,7 @@ namespace TabloidFullStack.Repositories
                             DisplayName = DbUtils.GetString(reader, "DisplayName"),
                             Email = DbUtils.GetString(reader, "Email"),
                             CreateDateTime = DbUtils.GetDateTime(reader, "CreateDateTime"),
-                            ImageLocation = DbUtils.GetString(reader, "ImageLocation"),
+                            ImageLocation = GetString(reader, "ImageLocation"), // Handle NULL here
                             UserTypeId = DbUtils.GetInt(reader, "UserTypeId"),
                             IsDeactivated = reader.GetBoolean(reader.GetOrdinal("IsDeactivated")),
                             UserType = new UserType()
@@ -140,8 +142,6 @@ namespace TabloidFullStack.Repositories
                                 Id = DbUtils.GetInt(reader, "UserTypeId"),
                                 Name = DbUtils.GetString(reader, "UserTypeName"),
                             }
-                            
-                            
                         };
                     }
                     reader.Close();
@@ -176,11 +176,9 @@ namespace TabloidFullStack.Repositories
             }
         }
 
-
-        public void Update(UserProfile userProfile) { 
-        
-        using (var conn = Connection)
-
+        public void Update(UserProfile userProfile)
+        {
+            using (var conn = Connection)
             {
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
@@ -197,7 +195,7 @@ namespace TabloidFullStack.Repositories
                                 IsDeactivated = @IsDeactivated
                         WHERE Id = @Id";
 
-                    DbUtils.AddParameter(cmd, "@Id", userProfile.Id); 
+                    DbUtils.AddParameter(cmd, "@Id", userProfile.Id);
                     DbUtils.AddParameter(cmd, "@FirstName", userProfile.FirstName);
                     DbUtils.AddParameter(cmd, "@LastName", userProfile.LastName);
                     DbUtils.AddParameter(cmd, "@DisplayName", userProfile.DisplayName);
@@ -205,12 +203,18 @@ namespace TabloidFullStack.Repositories
                     DbUtils.AddParameter(cmd, "@CreateDateTime", userProfile.CreateDateTime);
                     DbUtils.AddParameter(cmd, "@ImageLocation", userProfile.ImageLocation);
                     DbUtils.AddParameter(cmd, "@UserTypeId", userProfile.UserTypeId);
-                    DbUtils.AddParameter(cmd, "@IsDeactivated", userProfile.IsDeactivated); 
-
+                    DbUtils.AddParameter(cmd, "@IsDeactivated", userProfile.IsDeactivated);
 
                     cmd.ExecuteNonQuery();
                 }
             }
+        }
+
+        //addded for null image locations where default avatar image shows up
+        private static string GetString(SqlDataReader reader, string columnName)
+        {
+            int ordinal = reader.GetOrdinal(columnName);
+            return reader.IsDBNull(ordinal) ? null : reader.GetString(ordinal);
         }
     }
 }
