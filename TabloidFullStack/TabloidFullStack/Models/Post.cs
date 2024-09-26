@@ -20,6 +20,7 @@ namespace TabloidFullStack.Models
         public int UserProfileId { get; set; }
 
         public UserProfile Author { get; set; }
+
     }
 }
 
