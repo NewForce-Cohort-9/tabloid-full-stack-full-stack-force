@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAllProfiles } from "../../Managers/UserProfileManager";
 
 const ProfileListItem = ({ profile }) => {
+  const navigate = useNavigate();
+
   return (
     <>
       <td>
@@ -12,6 +14,24 @@ const ProfileListItem = ({ profile }) => {
         {profile.firstName} {profile.lastName}
       </td>
       <td>{profile.userType.name}</td>
+      {profile.isDeactivated ? (
+        <td
+          onClick={() => navigate(`/profile/reactivate/${profile.id}`)}
+          className="btn btn-success "
+          title="Reactivate"
+        >
+          Reactivate
+        </td>
+      ) : (
+        <td
+          onClick={() => navigate(`/profile/deactivate/${profile.id}`)}
+          style={{ backgroudColor: "red" }}
+          className="btn btn-danger "
+          title="Deactivate"
+        >
+          Deactivate
+        </td>
+      )}
     </>
   );
 };

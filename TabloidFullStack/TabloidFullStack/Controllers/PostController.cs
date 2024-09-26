@@ -46,6 +46,13 @@ namespace TabloidFullStack.Controllers
             return Ok(posts);
         }
 
+        [HttpGet("tag/{tagId}")]
+        public IActionResult GetByTag(int tagId)
+        {
+            var posts = _postRepository.GetByTagId(tagId);
+            return Ok(posts);
+        }
+
         [HttpPost]
         public IActionResult Post(Post post)
         {

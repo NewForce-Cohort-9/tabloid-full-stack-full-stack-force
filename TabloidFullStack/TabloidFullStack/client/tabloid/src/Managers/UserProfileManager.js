@@ -12,6 +12,8 @@ export const login = (userObject) => {
     })
     .then((userProfile) => {
       if (userProfile.id) {
+        if (userProfile.isDeactivated) return undefined;
+
         localStorage.setItem("userProfile", JSON.stringify(userProfile));
         return userProfile;
       } else {
@@ -63,8 +65,15 @@ export const getByProfileId = async (profileId) => {
   else return null;
 };
 
-
 export const getUserProfileById = (id) => {
-    return fetch(`${apiUrl}/api/UserProfile/${id}`)
-        .then((res) => res.json());
+  return fetch(`${apiUrl}/api/UserProfile/${id}`).then((res) => res.json());
+};
+
+export const updateProfile = async (userProfile) => {
+  console.log("profile from update", userProfile);
+  await fetch(`${profileBase}/${userProfile.id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(userProfile),
+  });
 };
