@@ -71,11 +71,11 @@ export default function UserProfileEdit() {
                 style={{ height: "2.5rem" }}
                 className="w-100 mh-100 d-flex text-capitalize"
               >
-                {userTypeOptions.map((option) => {
+                {userTypeOptions.map((option, index) => {
                   return (
                     <option
                       className="text-capitalize"
-                      key={option.id}
+                      key={index}
                       value={option.id}
                     >
                       {option.name}
