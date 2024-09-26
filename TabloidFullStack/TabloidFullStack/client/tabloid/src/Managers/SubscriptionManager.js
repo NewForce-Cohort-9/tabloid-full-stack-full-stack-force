@@ -17,5 +17,13 @@ export const addSubscription = (subscriberId, providerId) => {
 
   export const getPostsBySubscribedAuthors = (userId) => {
     return fetch(`/api/post/subscriptions/${userId}`)
-        .then(res => res.json());
-};
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch posts by subscribed authors");
+        }
+        return res.text(); 
+      })
+      .then((text) => {
+        return text ? JSON.parse(text) : [];
+      });
+  };
