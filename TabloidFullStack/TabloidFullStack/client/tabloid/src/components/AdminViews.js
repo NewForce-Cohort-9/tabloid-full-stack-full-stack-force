@@ -36,7 +36,7 @@ export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
         }
       >
 
-        <Route path="/home" element={<HomePage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/" element={<Hello />} />
         <Route path="/tags" element={<TagList />} />
         <Route path="/tags/add" element={<TagForm />} />
