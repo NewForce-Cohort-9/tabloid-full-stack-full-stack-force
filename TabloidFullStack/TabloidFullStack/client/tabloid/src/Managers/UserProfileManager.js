@@ -70,7 +70,6 @@ export const getUserProfileById = (id) => {
 };
 
 export const updateProfile = async (userProfile) => {
-  console.log("profile from update", userProfile);
   await fetch(`${profileBase}/${userProfile.id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
