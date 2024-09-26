@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { getByProfileId } from "../../Managers/UserProfileManager";
 
 export default function UserProfile() {
@@ -47,9 +47,23 @@ export default function UserProfile() {
                 </p>
                 <p className="text-muted mb-4">{profile.email}</p>
                 <div className="d-flex justify-content-center mb-2">
-                  <button type="button" className="btn btn-danger">
-                    Deactivate
-                  </button>
+                  {profile.isDeactivated ? (
+                    <Link
+                      to={`/profile/reactivate/${profile.id}`}
+                      type="button"
+                      className="btn btn-success"
+                    >
+                      Reactivate
+                    </Link>
+                  ) : (
+                    <Link
+                      to={`/profile/deactivate/${profile.id}`}
+                      type="button"
+                      className="btn btn-danger"
+                    >
+                      Deactivate
+                    </Link>
+                  )}
                   <button
                     type="button"
                     className="btn btn-outline-primary ms-1"
