@@ -59,7 +59,7 @@ namespace TabloidFullStack.Controllers
             post.CreateDateTime = DateTime.Now;
             post.IsApproved = true;
             _postRepository.AddPost(post);
-            return CreatedAtAction("GetPostById", new { id = post.Id }, post); 
+            return CreatedAtAction("GetPostById", new { id = post.Id }, post);
         }
 
         [HttpDelete("{id}")]

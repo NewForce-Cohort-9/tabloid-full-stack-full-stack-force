@@ -31,6 +31,8 @@ export const addPost = (post) => {
             });
         }
         return res.json();
+    }).then((post) => {
+        return post.id;
     });
 };
 
