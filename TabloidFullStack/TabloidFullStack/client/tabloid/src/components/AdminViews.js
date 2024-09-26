@@ -20,6 +20,7 @@ import UserProfile from "./UserProfiles/UserProfile";
 import Header from "./Header";
 import UserProfileConfirm from "./UserProfiles/UserProfileConfirm";
 import EditPostForm from "./Post/EditPostForm.js";
+import  HomePage  from "./Homepage.js";
 
 export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
   return (
@@ -33,6 +34,8 @@ export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
           </>
         }
       >
+
+        <Route path="/home" element={<HomePage />} />
         <Route path="/" element={<Hello />} />
         <Route path="/tags" element={<TagList />} />
         <Route path="/tags/add" element={<TagForm />} />

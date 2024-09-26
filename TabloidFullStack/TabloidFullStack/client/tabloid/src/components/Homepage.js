@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getPostsBySubscribedAuthors } from "../../Managers/SubscriptionManager";
+import { getPostsBySubscribedAuthors } from "../Managers/SubscriptionManager";
 
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
