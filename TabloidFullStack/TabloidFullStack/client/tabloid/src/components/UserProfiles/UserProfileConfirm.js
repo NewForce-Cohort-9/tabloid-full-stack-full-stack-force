@@ -22,8 +22,8 @@ export default function UserProfileConfirm() {
     setProfile(profile);
   };
 
-  const performAccountActionRedirect = async () => {
-    updateProfile({ ...profile, isDeactivated: true });
+  const performAccountActionRedirect = async (isDeactivated) => {
+    updateProfile({ ...profile, isDeactivated });
     navigate("/profiles");
   };
 
@@ -59,14 +59,14 @@ export default function UserProfileConfirm() {
         </Link>
         {isDeactivating ? (
           <button
-            onClick={performAccountActionRedirect}
+            onClick={() => performAccountActionRedirect(true)}
             className="btn btn-danger"
           >
             Deactivate
           </button>
         ) : (
           <button
-            onClick={() => updateProfile({ ...profile, isDeactivated: false })}
+            onClick={() => performAccountActionRedirect(false)}
             className="btn btn-success"
           >
             Reactivate
