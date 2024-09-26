@@ -17,7 +17,7 @@ const ProfileListItem = ({ profile }) => {
       {profile.isDeactivated ? (
         <td
           onClick={() => navigate(`/profile/reactivate/${profile.id}`)}
-          className="btn btn-success "
+          className="btn btn-success"
           title="Reactivate"
         >
           Reactivate
@@ -39,6 +39,8 @@ const ProfileListItem = ({ profile }) => {
 export default function UserProfileList() {
   const [profiles, setProfiles] = useState([]);
 
+  const [isFiltering, setIsFiltering] = useState(true);
+
   useEffect(() => {
     callGetAllProfiles();
   }, []);
@@ -48,11 +50,27 @@ export default function UserProfileList() {
     setProfiles(profiles);
   };
 
+  const filterDeactivated = async () => {
+    const profiles = await getAllProfiles();
+    if (isFiltering) {
+      const onlyDeactivated = profiles.filter((p) => p.isDeactivated);
+      setProfiles(onlyDeactivated);
+      setIsFiltering(false);
+    } else {
+      setProfiles(profiles);
+      setIsFiltering(true);
+    }
+  };
+
   return (
     <div className="container pt-5">
-      <div className="container d-flex align-items-center justify-content-between w-full">
+      <div className="container d-flex align-items-center justify-content-between">
         <h1>All User Profiles</h1>
+        <span onClick={filterDeactivated} className="btn btn-success">
+          {isFiltering ? "View Deactivated" : "View All"}
+        </span>
       </div>
+
       <table className="table table-striped">
         <thead>
           <tr>
