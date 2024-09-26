@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Http;
 
 namespace TabloidFullStack.Models
