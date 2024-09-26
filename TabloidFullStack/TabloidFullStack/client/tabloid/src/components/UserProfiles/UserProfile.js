@@ -38,7 +38,7 @@ export default function UserProfile() {
                   src={`https://localhost:5001/${profile.imageLocation}`}
                   alt="avatar"
                   className="rounded-circle img-fluid"
-                  style={{ width: "150px" }}
+                  style={{ width: "150px", height: "150px" }}
                 />
               ) : (
                 <img
