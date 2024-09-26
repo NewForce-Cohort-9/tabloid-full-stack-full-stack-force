@@ -2,17 +2,26 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   GetApprovedPosts,
-  getPostsByCategory,
+  getPostsByCategory, getPostsByTag,
 } from "../../Managers/PostManager";
 import Post from "./Post";
 import { GetAllCategories } from "../../Managers/CategoryManager";
+import { getAllTags } from "../../Managers/TagManager";
 
 export default function PostList() {
   const [posts, setPosts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [tags, setTags] = useState([]);
 
   useEffect(() => {
     GetAllCategories().then((data) => setCategories(data));
+  }, []);
+  useEffect(() => {
+
+  })
+
+  useEffect(() => {
+    getAllTags().then((data) => setTags(data));
   }, []);
   useEffect(() => {
 
@@ -30,6 +39,18 @@ export default function PostList() {
     if (id > 0)
     {
       const posts = await getPostsByCategory(id);
+      setPosts(posts)
+    }
+    else
+    {
+      callGetPosts()
+    }
+  }
+
+  const postsByTag = async (id) => {
+    if (id > 0)
+    {
+      const posts = await getPostsByTag(id);
       setPosts(posts)
     }
     else
@@ -60,6 +81,18 @@ export default function PostList() {
                 return(
                   <option key={category.id} value={category.id}>
                     {category.name}
+                  </option>
+                )
+              })}
+            </select>
+          </div>
+          <div className="dropdown">
+            <select className="btn btn-primary" onChange={(event) => {return postsByTag(parseInt(event.target.value))}}>
+              <option value="0">Filter by Tag</option>
+              {tags.map((tag) => {
+                return(
+                  <option key={tag.id} value={tag.id}>
+                    {tag.name}
                   </option>
                 )
               })}
