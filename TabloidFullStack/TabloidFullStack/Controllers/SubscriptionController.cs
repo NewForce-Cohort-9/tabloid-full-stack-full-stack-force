@@ -19,11 +19,13 @@ public class SubscriptionController : ControllerBase
         try
         {
             _subscriptionRepository.AddSubscription(subscriberId, providerId);
-            return Ok();
+
+
+            return Ok(new { message = "Subscription successful" });
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex.Message);
+            return StatusCode(500, new { message = ex.Message });
         }
     }
 }

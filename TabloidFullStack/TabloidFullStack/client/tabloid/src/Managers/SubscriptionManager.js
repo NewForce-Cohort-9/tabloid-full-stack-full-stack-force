@@ -1,11 +1,16 @@
-const apiUrl = "https://localhost:5001/api/subscription";
-
 export const addSubscription = (subscriberId, providerId) => {
-    return fetch(`${apiUrl}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ subscriberId, providerId })
-    }).then(res => res.ok ? res.json() : Promise.reject("Failed to subscribe"));
-};
+    return fetch(`https://localhost:5001/api/subscription?subscriberId=${subscriberId}&providerId=${providerId}`, {
+      method: "POST",
+    })
+    .then((response) => {
+      if (!response.ok) {
+       
+        return Promise.reject("Failed to subscribe.");
+      }
+      
+      return response.json().catch(() => {
+        
+        return { message: "Subscription successful without response body" };
+      });
+    });
+  };
