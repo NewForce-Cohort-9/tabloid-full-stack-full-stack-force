@@ -45,6 +45,7 @@ export default function MyPosts() {
                             <th>Title</th>
                             <th>Author</th>
                             <th>Category</th>
+                            <td>Estimated Read Time</td>
                             <th>Published On</th>
                             <th>Actions</th> 
                         </tr>

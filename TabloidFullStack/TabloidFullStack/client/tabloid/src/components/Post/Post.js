@@ -9,6 +9,27 @@ export default function Post({ post, handleDelete, showButtons }) {
       handleDelete(postId);
     }
   };
+  const readTime = () => {
+    const str = post.content;
+    const splitString = str.split(" ");
+    const splitStringLength = splitString.length;
+    const exactReadTime = Math.round(splitStringLength/256)
+    console.log(exactReadTime)
+    if(exactReadTime <=1){
+      return(
+        <td>
+          1 minute
+        </td>
+      )
+    }
+    else{
+      return(
+        <td>
+          {exactReadTime} minutes
+        </td>
+      )
+    }
+  }
   return (
     <>
       <td>{post.id}</td>
@@ -17,6 +38,7 @@ export default function Post({ post, handleDelete, showButtons }) {
       </td>
       <td>{post.author.displayName}</td>
       <td>{post.category.name}</td>
+      <td>{readTime()}</td>
       <td>{new Date(post.publishDateTime).toLocaleDateString()}</td>
       {showButtons && ( 
         <td>
