@@ -22,7 +22,7 @@ import UserProfileConfirm from "./UserProfiles/UserProfileConfirm";
 import UserProfileEdit from "./UserProfiles/UserProfileEdit.js";
 import EditPostForm from "./Post/EditPostForm.js";
 import  HomePage  from "./Homepage.js";
-import { UnauthorizedPostList } from "./Post/UnauthorizedPostList.js";
+import { UnauthorizedPostList } from "./Post/UnapprovedPostList.js";
 
 export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
   return (
