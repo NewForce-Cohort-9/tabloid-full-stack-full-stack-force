@@ -25,6 +25,7 @@ export default function UserProfile() {
       imageLocation: newImagePath, //update image location
     }));
   };
+  console.log(profile.imageLocation)
 
   return (
     <section style={{ backgroundColor: "#eee" }}>

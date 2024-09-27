@@ -48,12 +48,13 @@ export default function PostDetails() {
   }
 
   const handleImageUpload = (newImagePath) => {
+    console.log(newImagePath)
     setPost((prevProfile) => ({
       ...prevProfile,
       imageLocation: newImagePath, //update image location
     }));
   };
-
+console.log(post.imageLocation)
   return (
     <div className="container">
       {post.imageLocation ? (

@@ -16,8 +16,7 @@ export default function EditPostForm() {
   const [post, setPost] = useState({
     title: "",
     content: "",
-    categoryId: "",
-    imageLocation: null
+    categoryId: ""
   });
   const [categories, setCategories] = useState([]);
 

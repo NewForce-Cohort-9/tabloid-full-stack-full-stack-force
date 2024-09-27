@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const PostImage = ({postId}) => {
+export const PostImage = ({postId, onImageUpload}) => {
   const [file, setFile] = useState();
 
   const handleFileChange = (event) => {
@@ -17,13 +17,15 @@ export const PostImage = ({postId}) => {
 
     try {
         const response = await fetch(`https://localhost:5001/api/Post/upload?Id=${postId}`, {
-            method: "POST",
+            method: "PUT",
             body: formData,
           });
           if(!response.ok) throw new Error("Upload failed");
           const data = await response.json();
           console.log("Upload successful:", data);
-          window.location.reload();
+        //   window.location.reload();
+        console.log(data.filePath)
+        onImageUpload(data.filePath)
 
           setFile(null);
           event.target.reset();
