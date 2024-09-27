@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllProfiles } from "../../Managers/UserProfileManager";
-import { EditPencil } from "../Icons";
 
-const ProfileListItem = ({ profile }) => {
+const ProfileListItem = ({ profile, isAdminLossProtection }) => {
   const navigate = useNavigate();
+
+  const handleDeactivate = () => {
+    if (isAdminLossProtection(profile)) return;
+
+    navigate(`/profile/deactivate/${profile.id}`);
+  };
 
   return (
     <>
@@ -31,7 +36,7 @@ const ProfileListItem = ({ profile }) => {
         </td>
       ) : (
         <td
-          onClick={() => navigate(`/profile/deactivate/${profile.id}`)}
+          onClick={handleDeactivate}
           style={{ backgroudColor: "red" }}
           className="btn btn-danger "
           title="Deactivate"
@@ -68,6 +73,21 @@ export default function UserProfileList() {
     }
   };
 
+  const isAdminLossProtection = (profile) => {
+    const activeAdmins = profiles.filter(
+      (p) => !p.isDeactivated && p.userType.name === "Admin"
+    );
+
+    if (activeAdmins.length <= 1 && profile.userType.name === "Admin") {
+      window.alert(
+        "Make someone else an admin before you can deactivate another User Profile."
+      );
+      return true;
+    }
+
+    return false;
+  };
+
   return (
     <div className="container pt-5">
       <div className="container d-flex align-items-center justify-content-between">
@@ -91,7 +111,10 @@ export default function UserProfileList() {
             profiles.map((profile) => {
               return (
                 <tr key={profile.id}>
-                  <ProfileListItem profile={profile} />
+                  <ProfileListItem
+                    profile={profile}
+                    isAdminLossProtection={isAdminLossProtection}
+                  />
                 </tr>
               );
             })}

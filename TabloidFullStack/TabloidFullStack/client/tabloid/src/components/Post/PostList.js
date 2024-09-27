@@ -111,6 +111,7 @@ export default function PostList() {
               <th>Title</th>
               <th>Author</th>
               <th>Category</th>
+              <th>Estimated Read Time</th>
               <th>Published On</th>
             </tr>
           </thead>

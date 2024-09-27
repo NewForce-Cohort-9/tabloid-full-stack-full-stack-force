@@ -14,3 +14,13 @@ export const addSubscription = (subscriberId, providerId) => {
       });
     });
   };
+
+  export const getPostsBySubscribedAuthors = (userId) => {
+    return fetch(`/api/subscription/subscriptions/${userId}/posts`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch posts by subscribed authors");
+        }
+        return res.json();
+      });
+  };
