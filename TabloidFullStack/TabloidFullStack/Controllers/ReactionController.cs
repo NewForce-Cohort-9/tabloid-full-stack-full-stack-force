@@ -15,7 +15,6 @@ namespace TabloidFullStack.Controllers
             _reactionRepository = reactionRepository;
         }
         
-            // ReactionController.cs
             [HttpGet("post/{postId}")]
             public IActionResult GetReactionsForPost(int postId)
             {
