@@ -3,6 +3,7 @@ import { useLocation, useParams, useNavigate, Link } from "react-router-dom";
 import {
   getByProfileId,
   updateProfile,
+  getAllProfiles,
 } from "../../Managers/UserProfileManager";
 
 export default function UserProfileConfirm() {
@@ -23,8 +24,29 @@ export default function UserProfileConfirm() {
   };
 
   const performAccountActionRedirect = async (isDeactivated) => {
+    if (isDeactivated && (await isAdminProtection())) {
+      return;
+    }
+
     updateProfile({ ...profile, isDeactivated });
     navigate("/profiles");
+  };
+
+  const isAdminProtection = async () => {
+    const profiles = await getAllProfiles();
+
+    const activeAdmins = profiles.filter(
+      (p) => !p.isDeactivated && p.userType.name === "Admin"
+    );
+
+    if (activeAdmins.length <= 1 && profile.userType.name === "Admin") {
+      window.alert(
+        "Make someone else an admin before you can deactivate another User Profile."
+      );
+      return true;
+    }
+
+    return false;
   };
 
   if (!profile) return <div>Profile doesnt exist.</div>;
