@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   getByProfileId,
   updateProfile,
+  getAllProfiles,
 } from "../../Managers/UserProfileManager";
 import TagPageHeader from "../Tags/TagPageHeader";
 
@@ -40,6 +41,13 @@ export default function UserProfileEdit() {
     e.preventDefault();
     const selection = userTypeOptions.find((item) => item.selected);
 
+    if (await isAdminProtection()) {
+      window.alert(
+        "Make someone else an admin before changing this user profile."
+      );
+      return;
+    }
+
     await updateProfile({ ...profile, userTypeId: selection.id });
     navigate("/profiles");
   };
@@ -55,6 +63,16 @@ export default function UserProfileEdit() {
   const onUserTypeSelect = (e) => {
     const selection = selectUserType(Number(e.target.value));
     setUserTypeOptions(selection);
+  };
+
+  const isAdminProtection = async () => {
+    const profiles = await getAllProfiles();
+
+    const activeAdmins = profiles.filter(
+      (p) => !p.isDeactivated && p.userType.name === "Admin"
+    );
+
+    return activeAdmins.length <= 1 && profile.userType.name === "Admin";
   };
 
   return (

@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import {
-  GetApprovedPosts,
-  getPostsByCategory, getPostsByTag,
-} from "../../Managers/PostManager";
-import Post from "./Post";
+import { useEffect, useState } from "react";
 import { GetAllCategories } from "../../Managers/CategoryManager";
 import { getAllTags } from "../../Managers/TagManager";
+import { getPostsByCategory, getPostsByTag, GetUnapprovedPosts } from "../../Managers/PostManager";
+import { Link } from "react-router-dom";
+import Post from "./Post";
 
-export default function PostList() {
+export const UnauthorizedPostList = () => {
   const [posts, setPosts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
@@ -16,21 +13,17 @@ export default function PostList() {
   useEffect(() => {
     GetAllCategories().then((data) => setCategories(data));
   }, []);
-  useEffect(() => {
-
-  })
+  useEffect(() => {});
 
   useEffect(() => {
     getAllTags().then((data) => setTags(data));
   }, []);
- 
 
   useEffect(() => {
-    callGetPosts();
-  }, []);
-
+    callGetPosts()
+  },[]);
   const callGetPosts = async () => {
-    const posts = await GetApprovedPosts();
+    const posts = await GetUnapprovedPosts();
     setPosts(posts);
   };
   const postsByCategory = async (id) => {
@@ -56,7 +49,6 @@ export default function PostList() {
       callGetPosts()
     }
   }
-
   return (
     <>
       <header className="masthead bg-primary text-white text-center">
@@ -71,36 +63,7 @@ export default function PostList() {
 
       <div className="container pt-5">
         <div className="container d-flex align-items-center justify-content-between w-full">
-          <h1>All Posts</h1>
-          <div className="dropdown">
-            <select className="btn btn-primary" onChange={(event) => {return postsByCategory(parseInt(event.target.value))}}>
-              <option value="0">Filter by Category</option>
-              {categories.map((category) => {
-                return(
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                )
-              })}
-            </select>
-          </div>
-          <div className="dropdown">
-            <select className="btn btn-primary" onChange={(event) => {return postsByTag(parseInt(event.target.value))}}>
-              <option value="0">Filter by Tag</option>
-              {tags.map((tag) => {
-                return(
-                  <option key={tag.id} value={tag.id}>
-                    {tag.name}
-                  </option>
-                )
-              })}
-            </select>
-          </div>
-          <Link to="/posts/create">
-            <button className="btn btn-outline-primary mx-1 text-primary">
-              Create New Post
-            </button>
-          </Link>
+          <h1>Posts Pending Approval</h1>
         </div>
         <table className="table table-striped">
           <thead>
@@ -117,6 +80,7 @@ export default function PostList() {
             {posts &&
               posts.length > 0 &&
               posts.map((post) => {
+                console.log(post.isApproved)
                 return (
                   <tr key={post.id}>
                     <Post post={post} showActions={false} />
@@ -128,4 +92,4 @@ export default function PostList() {
       </div>
     </>
   );
-}
+};
