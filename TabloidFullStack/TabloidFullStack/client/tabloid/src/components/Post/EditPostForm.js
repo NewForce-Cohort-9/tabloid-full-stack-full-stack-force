@@ -4,6 +4,8 @@ import { getPostById, updatePost } from "../../Managers/PostManager";
 import { GetAllCategories } from "../../Managers/CategoryManager";
 import { getAllTags } from "../../Managers/TagManager";
 import { deletePostTag, getPostTagsByPost } from "../../Managers/PostTagManager";
+import { PostImage } from "./PostImage";
+
 
 export default function EditPostForm() {
   const { postId } = useParams();
@@ -163,6 +165,9 @@ export default function EditPostForm() {
             </div>
           );
         })}
+      </fieldset>
+      <fieldset>
+        <PostImage postId = {post.id}/>
       </fieldset>
       <button type="submit">Save Changes</button>
     </form>
