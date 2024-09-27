@@ -2,6 +2,7 @@
 using TabloidFullStack.Models;
 using TabloidFullStack.Repositories;
 
+
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace TabloidFullStack.Controllers
@@ -60,6 +61,36 @@ namespace TabloidFullStack.Controllers
                 userProfile);
         }
 
+
+        //check https://localhost:5001/uploads/dog.png
+        [HttpPost("upload")]
+        public IActionResult UploadProfileImage(IFormFile file, int userId) 
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            var filePath = Path.Combine("wwwroot/uploads", file.FileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            //update user profile with the new image path
+            var userProfile = _userRepository.GetById(userId);
+            if (userProfile != null)
+            {
+                userProfile.ImageLocation = $"uploads/{file.FileName}"; 
+                _userRepository.Update(userProfile);
+            }
+
+            return Ok(new { FilePath = filePath });
+        }
+
+
+
         [HttpPut("{id}")]
         public IActionResult Put(int id, UserProfile userProfile)
         {
@@ -68,5 +99,6 @@ namespace TabloidFullStack.Controllers
             _userRepository.Update(userProfile);
             return NoContent(); 
         }
+
     }
 }
