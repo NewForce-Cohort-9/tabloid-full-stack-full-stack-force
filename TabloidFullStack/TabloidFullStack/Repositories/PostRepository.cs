@@ -57,6 +57,54 @@ namespace TabloidFullStack.Repositories
             }
         }
 
+        public List<Post> GetUnapprovedPosts()
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT p.Id, p.Title, p.Content, p.CreateDateTime, p.PublishDateTime, p.IsApproved,
+                               p.CategoryId, c.Name as CategoryName, u.DisplayName as Author
+                        FROM Post p
+                        JOIN UserProfile u ON p.UserProfileId = u.Id
+                        JOIN Category c ON p.CategoryId = c.Id
+                        WHERE p.IsApproved = 0 
+                          AND p.PublishDateTime <= GETDATE()
+                        ORDER BY p.PublishDateTime DESC";
+
+                    var reader = cmd.ExecuteReader();
+                    var posts = new List<Post>();
+
+                    while (reader.Read())
+                    {
+                        posts.Add(new Post
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Title = reader.GetString(reader.GetOrdinal("Title")),
+                            Content = reader.GetString(reader.GetOrdinal("Content")),
+                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                            PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
+                            IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
+                            Category = new Category
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("CategoryId")),
+                                Name = reader.GetString(reader.GetOrdinal("CategoryName"))
+                            },
+                            Author = new UserProfile
+                            {
+                                DisplayName = reader.GetString(reader.GetOrdinal("Author"))
+                            }
+                        });
+                    }
+
+                    reader.Close();
+                    return posts;
+                }
+            }
+        }
+
         public List<Post> GetPostsByUser(int userId)
         {
             using (var conn = Connection)
@@ -270,13 +318,15 @@ namespace TabloidFullStack.Repositories
                         UPDATE Post
                         SET Title = @Title,
                             Content = @Content,
-                            CategoryId = @CategoryId
+                           
+                            ImageLocation = @ImageLocation
                         WHERE Id = @Id";
 
                     cmd.Parameters.AddWithValue("@Id", post.Id);
                     cmd.Parameters.AddWithValue("@Title", post.Title);
                     cmd.Parameters.AddWithValue("@Content", post.Content);
-                    cmd.Parameters.AddWithValue("@CategoryId", post.CategoryId);
+                    
+                    cmd.Parameters.AddWithValue("@ImageLocation", post.ImageLocation);
 
                     cmd.ExecuteNonQuery();
                 }

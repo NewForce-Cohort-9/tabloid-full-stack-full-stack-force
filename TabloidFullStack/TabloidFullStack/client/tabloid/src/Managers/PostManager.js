@@ -4,6 +4,10 @@ export const GetApprovedPosts = () => {
     return fetch(`${apiUrl}/api/Post`)
         .then((res) => res.json());
 };
+export const GetUnapprovedPosts = () => {
+    return fetch(`${apiUrl}/api/Post/unapproved`)
+        .then((res) => res.json());
+};
 
 
 export const getPostsByUser = (userId) => {

@@ -5,6 +5,7 @@ namespace TabloidFullStack.Repositories
     public interface IPostRepository
     {
         List<Post> GetApprovedPosts();
+        List<Post> GetUnapprovedPosts();
         List<Post> GetPostsByUser(int userId);
         List<Post> GetByCategoryId(int categoryId);
 
