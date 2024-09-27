@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getByProfileId } from "../../Managers/UserProfileManager";
+import { getPostsByUser } from "../../Managers/PostManager";
 import UserProfileImage from "./UserProfileImage";
+import UserProfilePosts from "./UserProfilePosts";
 
 export default function UserProfile() {
   const [profile, setProfile] = useState(null);
+  const [posts, setPosts] = useState([]);
   const { id: profileId } = useParams();
 
   useEffect(() => {
@@ -13,11 +16,11 @@ export default function UserProfile() {
 
   const callGetProfile = async () => {
     const profile = await getByProfileId(profileId);
+    const posts = await getPostsByUser(profileId);
+
     setProfile(profile);
+    setPosts(posts);
   };
-
-  if (!profile) return <div>Profile doesnt exist.</div>;
-
 
   const handleImageUpload = (newImagePath) => {
     setProfile((prevProfile) => ({
@@ -26,6 +29,7 @@ export default function UserProfile() {
     }));
   };
 
+  if (!profile) return <div>Profile doesnt exist.</div>;
   return (
     <section style={{ backgroundColor: "#eee" }}>
       <div className="container py-5">
@@ -33,24 +37,27 @@ export default function UserProfile() {
           <div className="col-lg-4">
             <div className="card mb-4">
               <div className="card-body text-center">
-              {profile.imageLocation ? (
-                <img
-                  src={`https://localhost:5001/${profile.imageLocation}`}
-                  alt="avatar"
-                  className="rounded-circle img-fluid"
-                  style={{ width: "150px", height: "150px" }}
-                />
-              ) : (
-                <img
-                  src="https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg"
-                  alt="default avatar"
-                  className="rounded-circle img-fluid"
-                  style={{ width: "150px" }}
-                />
-              )}
+                {profile.imageLocation ? (
+                  <img
+                    src={`https://localhost:5001/${profile.imageLocation}`}
+                    alt="avatar"
+                    className="rounded-circle img-fluid"
+                    style={{ width: "150px", height: "150px" }}
+                  />
+                ) : (
+                  <img
+                    src="https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg"
+                    alt="default avatar"
+                    className="rounded-circle img-fluid"
+                    style={{ width: "150px" }}
+                  />
+                )}
 
-              {/* UserProfileImage component for upload image */}
-              <UserProfileImage userId={profile.id} onImageUpload={handleImageUpload} />
+                {/* UserProfileImage component for upload image */}
+                <UserProfileImage
+                  userId={profile.id}
+                  onImageUpload={handleImageUpload}
+                />
 
                 <h5 className="my-3">{profile.displayName}</h5>
                 <p className="text-muted mb-1">
@@ -143,17 +150,9 @@ export default function UserProfile() {
               </div>
             </div>
           </div>
+          <UserProfilePosts posts={posts} />
         </div>
       </div>
     </section>
   );
 }
-
-
-
-
-
-
-
-
-
