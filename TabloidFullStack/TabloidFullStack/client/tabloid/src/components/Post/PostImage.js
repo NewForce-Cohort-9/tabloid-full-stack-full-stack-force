@@ -1,14 +1,19 @@
 import { useState } from "react";
 
 export const PostImage = ({postId}) => {
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState();
+
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
+    console.log(event.target.files[0])
+ 
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
     formData.append("file", file);
+    console.log(formData);
 
     try {
         const response = await fetch(`https://localhost:5001/api/Post/upload?Id=${postId}`, {
@@ -29,7 +34,7 @@ export const PostImage = ({postId}) => {
     return (
       <form onSubmit={handleSubmit}>
         <input type="file" onChange={handleFileChange} required />
-        <button type="submit">Upload Image</button>
+        <button type="submit">Upload image</button>
       </form>
     );
   };

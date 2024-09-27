@@ -1,22 +1,28 @@
 import React, { useState } from "react";
 
-const UserProfileImage = ({ userId }) => { 
+const UserProfileImage = ({ userId }) => {
   const [file, setFile] = useState(null);
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
+    console.log(event.target.files[0])
+   
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
     formData.append("file", file);
+    console.log(formData);
 
     try {
-      const response = await fetch(`https://localhost:5001/api/userprofile/upload?userId=${userId}`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `https://localhost:5001/api/userprofile/upload?userId=${userId}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) throw new Error("Upload failed");
       const data = await response.json();
@@ -36,9 +42,6 @@ const UserProfileImage = ({ userId }) => {
       <button type="submit">Upload Image</button>
     </form>
   );
-
-
-  
 };
 
 export default UserProfileImage;

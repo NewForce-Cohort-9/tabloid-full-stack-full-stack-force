@@ -14,7 +14,6 @@ export default function Post({ post, handleDelete, showButtons }) {
     const splitString = str.split(" ");
     const splitStringLength = splitString.length;
     const exactReadTime = Math.round(splitStringLength/256)
-    console.log(exactReadTime)
     if(exactReadTime <=1){
       return(
         <td>

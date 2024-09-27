@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { getPostById, deletePost } from "../../Managers/PostManager";
 import { getReactionsForPost } from "../../Managers/PostReactionManager";
 import { addSubscription } from "../../Managers/SubscriptionManager";
+import { PostImage } from "./PostImage";
 
 export default function PostDetails() {
   const { id } = useParams();
@@ -46,6 +47,13 @@ export default function PostDetails() {
     return <div>Loading...</div>;
   }
 
+  const handleImageUpload = (newImagePath) => {
+    setPost((prevProfile) => ({
+      ...prevProfile,
+      imageLocation: newImagePath, //update image location
+    }));
+  };
+
   return (
     <div className="container">
       {post.imageLocation ? (
@@ -57,6 +65,7 @@ export default function PostDetails() {
         <img style={{ width: "150px", height: "150px" }}/>
       )
     }
+    <PostImage postId = {post.id} onImageUpload={handleImageUpload} />
       <h1>{post.title}</h1>
       <p>{post.content}</p>
       <p>Published on: {new Date(post.publishDateTime).toLocaleDateString()}</p>
