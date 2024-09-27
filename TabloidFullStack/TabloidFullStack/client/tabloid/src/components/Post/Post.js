@@ -13,7 +13,7 @@ export default function Post({ post, handleDelete, showButtons }) {
     const str = post.content;
     const splitString = str.split(" ");
     const splitStringLength = splitString.length;
-    const exactReadTime = Math.round(splitStringLength/256*60)
+    const exactReadTime = Math.round(splitStringLength/256)
     console.log(exactReadTime)
     if(exactReadTime <=1){
       return(
