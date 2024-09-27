@@ -22,6 +22,14 @@ namespace TabloidFullStack.Controllers
             var posts = _postRepository.GetApprovedPosts();
             return Ok(posts);
         }
+
+        [HttpGet("unapproved")]
+        public IActionResult GetUnapprovedPosts()
+        {
+            var posts = _postRepository.GetUnapprovedPosts();
+            return Ok(posts);
+        }
+
         [HttpGet("myposts/{userId}")]
         public IActionResult GetPostsByUser(int userId)
         {
@@ -57,7 +65,14 @@ namespace TabloidFullStack.Controllers
         public IActionResult Post(Post post)
         {
             post.CreateDateTime = DateTime.Now;
-            post.IsApproved = true;
+            if (post.Author.UserTypeId == 1)
+            {
+                post.IsApproved = true;
+            }
+            else
+            {
+                post.IsApproved = false;
+            }
             _postRepository.AddPost(post);
             return CreatedAtAction("GetPostById", new { id = post.Id }, post);
         }
@@ -81,6 +96,28 @@ namespace TabloidFullStack.Controllers
 
             return NoContent();
         }
+        [HttpPut("upload")]
+        public IActionResult UploadPostImage(IFormFile file, int postId)
+        {
+            if(file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
 
+            var filePath = Path.Combine("wwwroot/uploads", file.FileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            var post = _postRepository.GetPostById(postId);
+            if (post != null)
+            {
+                post.ImageLocation = $"uploads/{file.FileName}";
+                _postRepository.UpdatePost(post);
+            }
+
+            return Ok(new {FilePath = filePath});
+        }
     }
 }
