@@ -23,7 +23,7 @@ namespace TabloidFullStack.Controllers
                 return BadRequest("Reaction data is not valid.");
             }
 
-            _postReactionRepository.Add(postReaction);
+            _postReactionRepository.AddOrUpdate(postReaction);
             //return Ok();
             return Ok(postReaction);
         }

@@ -137,7 +137,7 @@ const handleReaction = (reactionType) => {
 
 <div>
         <img
-          src="thumbs-up-icon.png" // Update with your actual thumbs up icon path
+          src="https://cdn-icons-png.flaticon.com/512/25/25297.png" // Update with your actual thumbs up icon path
           alt="Thumbs Up"
           onClick={() => handleReaction('up')}
           style={{ cursor: 'pointer', opacity: userReaction === 'up' ? 0.5 : 1 }}
@@ -145,7 +145,7 @@ const handleReaction = (reactionType) => {
         <span>{reactions.find(r => r.id === 1)?.reactionCount}</span>
         
         <img
-          src="thumbs-down-icon.png" // Update with your actual thumbs down icon path
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6Jt4fWTTKq-a3g4LAk1FNBRURO87dt5UDjg&s" // Update with your actual thumbs down icon path
           alt="Thumbs Down"
           onClick={() => handleReaction('down')}
           style={{ cursor: 'pointer', opacity: userReaction === 'down' ? 0.5 : 1 }}
