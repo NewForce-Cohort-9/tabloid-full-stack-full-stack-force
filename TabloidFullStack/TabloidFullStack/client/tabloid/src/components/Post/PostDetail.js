@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { getPostById, deletePost } from "../../Managers/PostManager"; 
+import { getPostById, deletePost } from "../../Managers/PostManager";
 import { getReactionsForPost, addPostReaction, removePostReaction } from "../../Managers/PostReactionManager";
 import { addSubscription, isSubscribed, unsubscribe } from "../../Managers/SubscriptionManager"; 
+import { PostImage } from "./PostImage";
 
 export default function PostDetails() {
   const { id } = useParams();
@@ -11,7 +12,7 @@ export default function PostDetails() {
   const navigate = useNavigate();
   const [reactions, setReactions] = useState([]);
   const [userReaction, setUserReaction] = useState(null); // up, down, or null
-  const userProfile = JSON.parse(localStorage.getItem('userProfile'));
+  const userProfile = JSON.parse(localStorage.getItem("userProfile"));
 
   useEffect(() => {
     getPostById(id).then((data) => setPost(data));
@@ -38,7 +39,7 @@ export default function PostDetails() {
     if (window.confirm("Are you sure you want to delete this post?")) {
       deletePost(id).then(() => {
         alert("Post deleted successfully.");
-        navigate("/posts"); 
+        navigate("/posts");
       });
     }
   };
@@ -111,8 +112,26 @@ export default function PostDetails() {
     return <div>Loading...</div>;
   }
 
+  const handleImageUpload = (newImagePath) => {
+    console.log(newImagePath)
+    setPost((prevProfile) => ({
+      ...prevProfile,
+      imageLocation: newImagePath, //update image location
+    }));
+  };
+
   return (
     <div className="container">
+      {post.imageLocation ? (
+        <img 
+        src={`https://localhost:5001/${post.imageLocation}`}
+        style={{ width: "150px", height: "150px" }}
+          />
+      ) : (
+        <img style={{ width: "150px", height: "150px" }}/>
+      )
+    }
+    <PostImage postId = {post.id} onImageUpload={handleImageUpload} />
       <h1>{post.title}</h1>
       <p>{post.content}</p>
       <p>Published on: {new Date(post.publishDateTime).toLocaleDateString()}</p>
@@ -123,7 +142,11 @@ export default function PostDetails() {
       </button>
 
       {/* Link to the comment list page */}
-      <Link to={`/posts/${id}/comments`} className="btn btn-outline-primary mx-1" title="View Comments">
+      <Link
+        to={`/posts/${id}/comments`}
+        className="btn btn-outline-primary mx-1"
+        title="View Comments"
+      >
         View Comments
       </Link>
 

@@ -5,12 +5,15 @@ const UserProfileImage = ({ userId }) => {
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
+    console.log(event.target.files[0])
+   
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
     formData.append("file", file);
+    console.log(formData);
 
     try {
       const response = await fetch(
