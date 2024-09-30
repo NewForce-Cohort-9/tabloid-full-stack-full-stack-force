@@ -463,30 +463,40 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { getPostById, deletePost } from "../../Managers/PostManager"; 
 import { getReactionsForPost, addPostReaction, removePostReaction } from "../../Managers/PostReactionManager";
-import { addSubscription } from "../../Managers/SubscriptionManager";
+import { addSubscription, isSubscribed, unsubscribe } from "../../Managers/SubscriptionManager"; 
 
 export default function PostDetails() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
+  const [subscribedStatus, setSubscribedStatus] = useState(false); 
   const navigate = useNavigate();
   const [reactions, setReactions] = useState([]);
-  const [userReaction, setUserReaction] = useState(null);
+  const [userReaction, setUserReaction] = useState(null); 
   const userProfile = JSON.parse(localStorage.getItem('userProfile'));
 
   useEffect(() => {
     getPostById(id).then((data) => setPost(data));
-    fetchReactions();
-  }, [id]);
+
+    if (userProfile && post) {
+      isSubscribed(userProfile.id, post.author.id)
+        .then((status) => setSubscribedStatus(status)) 
+        .catch(() => setSubscribedStatus(false));
+    }
+  }, [id, post, userProfile]);
 
   const fetchReactions = () => {
     getReactionsForPost(id).then((data) => {
       setReactions(data);
       const userReactionRecord = data.find(r => r.userProfileId === userProfile.id);
       if (userReactionRecord) {
-        setUserReaction(userReactionRecord.reactionId); // Store the reactionId instead
+        setUserReaction(userReactionRecord.reactionId);
       }
     });
   };
+
+  useEffect(() => {
+    fetchReactions();
+  }, [id]);
 
   const handleDelete = () => {
     if (window.confirm("Are you sure you want to delete this post?")) {
@@ -500,7 +510,10 @@ export default function PostDetails() {
   const handleSubscribe = () => {
     if (post && userProfile) {
       addSubscription(userProfile.id, post.author.id)
-        .then(() => alert(`Subscribed to ${post.author.displayName}`))
+        .then(() => {
+          setSubscribedStatus(true); 
+          alert(`Subscribed to ${post.author.displayName}`);
+        })
         .catch((err) => {
           alert("Failed to subscribe, you may already be subscribed.");
           console.error("Failed to subscribe", err);
@@ -510,13 +523,25 @@ export default function PostDetails() {
     }
   };
 
+  const handleUnsubscribe = () => {
+    if (post && userProfile) {
+      unsubscribe(userProfile.id, post.author.id)
+        .then(() => {
+          setSubscribedStatus(false); 
+          alert(`Unsubscribed from ${post.author.displayName}`);
+        })
+        .catch((err) => console.error("Failed to unsubscribe", err));
+    } else {
+      alert("You need to be logged in to unsubscribe.");
+    }
+  };
+
   const handleReaction = (reactionType) => {
     if (!userProfile) {
       alert("You need to be logged in to react.");
       return;
     }
 
-    // Dynamically retrieve the reaction ID based on the reactions array
     const reaction = reactions.find(r => r.name.toLowerCase() === reactionType);
     if (!reaction) {
       alert("Reaction not found.");
@@ -524,12 +549,10 @@ export default function PostDetails() {
     }
     const reactionId = reaction.id;
 
-    // If user clicks the same reaction, remove it (toggle off)
     if (userReaction === reactionId) {
       removePostReaction(post.id, userProfile.id, reactionId)
         .then(() => {
           setUserReaction(null);
-          // Update reaction count
           setReactions(prevReactions => 
             prevReactions.map(r => 
               r.id === reactionId 
@@ -545,11 +568,10 @@ export default function PostDetails() {
       return;
     }
 
-    // Handle reaction toggle
     addPostReaction(post.id, reactionId, userProfile.id)
       .then(() => {
         setUserReaction(reactionId);
-        fetchReactions(); // Refresh reaction count after adding a new reaction
+        fetchReactions(); // Refresh reaction count
       })
       .catch(error => {
         console.error("Error adding reaction:", error);
@@ -576,9 +598,15 @@ export default function PostDetails() {
         View Comments
       </Link>
 
-      <button className="btn btn-outline-success mx-1" onClick={handleSubscribe}>
-        Subscribe to {post.author.displayName}
-      </button>
+      {subscribedStatus ? (
+        <button className="btn btn-outline-danger mx-1" onClick={handleUnsubscribe}>
+          Unsubscribe from {post.author.displayName}
+        </button>
+      ) : (
+        <button className="btn btn-outline-success mx-1" onClick={handleSubscribe}>
+          Subscribe to {post.author.displayName}
+        </button>
+      )}
 
       <div>
         {reactions.map((reaction) => (
@@ -586,8 +614,8 @@ export default function PostDetails() {
             <img
               src={reaction.imageLocation}
               alt={reaction.name}
-              style={{ width: '50px', height: '50px', padding:'10px', cursor: 'pointer', opacity: userReaction === reaction.id ? 1 : 0.5 }} // Adjust opacity based on user reaction
-              onClick={() => handleReaction(reaction.name.toLowerCase())} // Pass reaction type
+              style={{ width: '50px', height: '50px', padding:'10px', cursor: 'pointer', opacity: userReaction === reaction.id ? 1 : 0.5 }}
+              onClick={() => handleReaction(reaction.name.toLowerCase())}
             />
             <span>{reaction.reactionCount}</span>
           </div>
