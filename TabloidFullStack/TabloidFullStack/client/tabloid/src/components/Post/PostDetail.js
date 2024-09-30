@@ -20,9 +20,8 @@ export default function PostDetails() {
     if (userProfile && post) {
       isSubscribed(userProfile.id, post.author.id)
         .then((status) => setSubscribedStatus(status)) 
-        .catch(() => setSubscribedStatus(false)); // Default to not subscribed on error
+        .catch(() => setSubscribedStatus(false));
     }
-    fetchReactions(); // Load reactions
   }, [id, post, userProfile]);
 
   const fetchReactions = () => {
@@ -30,10 +29,14 @@ export default function PostDetails() {
       setReactions(data);
       const userReactionRecord = data.find(r => r.userProfileId === userProfile.id);
       if (userReactionRecord) {
-        setUserReaction(userReactionRecord.reactionId === 1 ? 'up' : 'down'); // 1 is thumbs up and 2 is thumbs down
+        setUserReaction(userReactionRecord.reactionId);
       }
     });
   };
+
+  useEffect(() => {
+    fetchReactions();
+  }, [id]);
 
   const handleDelete = () => {
     if (window.confirm("Are you sure you want to delete this post?")) {
@@ -79,9 +82,14 @@ export default function PostDetails() {
       return;
     }
 
-    const reactionId = reactionType === 'up' ? 1 : 2; // 1 is thumbs up and 2 is thumbs down
+    const reaction = reactions.find(r => r.name.toLowerCase() === reactionType);
+    if (!reaction) {
+      alert("Reaction not found.");
+      return;
+    }
+    const reactionId = reaction.id;
 
-    if (userReaction === reactionType) {
+    if (userReaction === reactionId) {
       removePostReaction(post.id, userProfile.id, reactionId)
         .then(() => {
           setUserReaction(null);
@@ -92,9 +100,8 @@ export default function PostDetails() {
                 : r
             )
           );
-          fetchReactions();
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("Error removing reaction:", error);
           alert("Failed to remove reaction.");
         });
@@ -103,8 +110,12 @@ export default function PostDetails() {
 
     addPostReaction(post.id, reactionId, userProfile.id)
       .then(() => {
-        setUserReaction(reactionType);
-        fetchReactions();
+        setUserReaction(reactionId);
+        fetchReactions(); //refresh reaction count
+      })
+      .catch(error => {
+        console.error("Error adding reaction:", error);
+        alert("Failed to add reaction.");
       });
   };
 
@@ -150,7 +161,6 @@ export default function PostDetails() {
         View Comments
       </Link>
 
-      {/* Conditional Subscribe/Unsubscribe button */}
       {subscribedStatus ? (
         <button className="btn btn-outline-danger mx-1" onClick={handleUnsubscribe}>
           Unsubscribe from {post.author.displayName}
@@ -161,25 +171,23 @@ export default function PostDetails() {
         </button>
       )}
 
-      {/* Reaction */}
       <div>
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/25/25297.png" 
-          alt="Thumbs Up"
-          onClick={() => handleReaction('up')}
-          style={{ width: '50px', height: '50px', padding: '10px',cursor: 'pointer', opacity: userReaction === 'up' ? 1 : 0.5 }}
-        />
-        <span>{reactions.find(r => r.id === 1)?.reactionCount}</span>
-        
-        <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6Jt4fWTTKq-a3g4LAk1FNBRURO87dt5UDjg&s" 
-          alt="Thumbs Down"
-          onClick={() => handleReaction('down')}
-          style={{ width: '50px', height: '50px', padding: '11px',cursor: 'pointer', opacity: userReaction === 'down' ? 1 : 0.5 }}
-        />
-        <span>{reactions.find(r => r.id === 2)?.reactionCount}</span>
+        {reactions.map((reaction) => (
+          <div key={reaction.id} style={{ display: 'inline-block', margin: '10px' }}>
+            <img
+              src={reaction.imageLocation}
+              alt={reaction.name}
+              style={{ width: '50px', height: '50px', padding:'10px', cursor: 'pointer', opacity: userReaction === reaction.id ? 1 : 0.5 }}
+              onClick={() => handleReaction(reaction.name.toLowerCase())}
+            />
+            <span>{reaction.reactionCount}</span>
+          </div>
+        ))}
       </div>
 
+      <Link to="/create-reaction" className="btn btn-outline-primary mx-1">
+        Create New Reaction
+      </Link>
     </div>
   );
 }
