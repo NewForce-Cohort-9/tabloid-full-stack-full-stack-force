@@ -6,7 +6,7 @@ export const PostApprovalConfirm = () => {
     const [post, setPost] = useState(null);
     const {id: postId} = useParams();
     const location = useLocation();
-    const isApproving = location.pathname.includes("approve")
+    const isDisapproving = location.pathname.includes("disapprove")
 
     const navigate = useNavigate();
     
@@ -56,7 +56,44 @@ export const PostApprovalConfirm = () => {
             navigate("/approval")
         })
     }
-
+    const disapprovePost = (event) => {
+        event.preventDefault()
+        post.isApproved = false;
+        console.log(post);
+        const changedPost = {
+            id: Number(postId),
+      title: post.title,
+      content: post.content,
+      imageLocation: "default.jpg",
+      createDateTime: new Date().toISOString(),
+      publishDateTime: new Date().toISOString(),
+      isApproved: post.isApproved,
+      categoryId: post.categoryId,
+      category: {
+        id: post.categoryId,
+        name:
+          post?.category?.name,
+      },
+      userProfileId: post?.author?.id,
+      author: {
+        id: post.author.id,
+        firstName: post.author.firstName || "string",
+        lastName: post.author.lastName || "string",
+        displayName: post.author.displayName || "string",
+        email: post.author.email || "user@example.com",
+        createDateTime: post.author.createDateTime || new Date().toISOString(),
+        imageLocation: post.author.imageLocation || "default.jpg",
+        userTypeId: post.author.userTypeId,
+        userType: {
+          id: post.author.userTypeId,
+          name: post.author.userType?.name || "string",
+        },
+      },
+        }
+        updatePost(changedPost).then(() => {
+            navigate("/approval")
+        })
+    }
     return (
         <div
       style={{
@@ -67,9 +104,9 @@ export const PostApprovalConfirm = () => {
         marginTop: "6rem",
       }}
     >
-      <h2>{isApproving ? "Approve" : "Disapprove"} post</h2>
+      <h2>{isDisapproving ? "Disapprove" : "Approve"} post</h2>
       <p>
-        Are you sure you want to {isApproving ? "approve" : "disapprove"}{" "}
+        Are you sure you want to {isDisapproving ? "disapprove" : "approve"}{" "}
         this post?
       </p>
       <div className="d-flex flex-column gap-1 my-4">
@@ -89,19 +126,20 @@ export const PostApprovalConfirm = () => {
         <Link to="/profiles" className="btn btn-secondary">
           Cancel
         </Link>
-        {isApproving ? (
-          <button
+        {isDisapproving ? (
+            <button
+            onClick={disapprovePost}
+            className="btn btn-danger"
+          >
+            Disapprove
+          </button>
+          
+        ) : (
+            <button
             onClick={ApprovePost}
             className="btn btn-success"
           >
             Approve
-          </button>
-        ) : (
-          <button
-            
-            className="btn btn-danger"
-          >
-            Disapprove
           </button>
         )}
       </div>
