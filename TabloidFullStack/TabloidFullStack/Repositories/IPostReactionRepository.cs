@@ -8,5 +8,6 @@ namespace TabloidFullStack.Repositories
         void AddOrUpdate(PostReaction postReaction);
         List<Reaction> GetReactionsWithCountForPost(int postId);
         PostReaction GetUserReaction(int postId, int userProfileId);
+        void RemoveReaction(PostReaction postReaction);
     }
 }

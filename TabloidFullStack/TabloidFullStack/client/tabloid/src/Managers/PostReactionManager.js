@@ -1,31 +1,8 @@
-// const apiUrl = "https://localhost:5001/api/PostReaction";
-
-// export const addPostReaction = (postId, reactionId, userProfileId) => {
-//   return fetch(`${apiUrl}`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({
-//       postId: postId,
-//       reactionId: reactionId,
-//       userProfileId: userProfileId,
-//     }),
-//   }).then((res) => {
-//     if (!res.ok) {
-//       throw new Error("Failed to add reaction");
-//     }
-//     return res.json();
-//   });
-// };
-
-
 const baseUrl = "https://localhost:5001/api/PostReaction";
 
 export const getReactionsForPost = (postId) => {
   return fetch(`${baseUrl}/post/${postId}`)
     .then(res => {
-      if (!res.ok) throw new Error("Failed to fetch reactions");
       return res.json();
     });
 };
@@ -42,9 +19,46 @@ export const addPostReaction = (postId, reactionId, userProfileId) => {
       userProfileId,
     }),
   }).then((res) => {
-    if (!res.ok) {
-      throw new Error("Failed to add reaction");
-    }
     return res.json();
   });
 };
+
+export const removePostReaction = (postId, userProfileId, reactionId) => {
+  return fetch(`${baseUrl}/remove`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      postId,
+      userProfileId,
+      reactionId,
+    }),
+  }).then(res => {
+    if (!res.ok) {
+      throw new Error('Failed to remove reaction');
+    }
+    //if response has no body, don't need to parse it as JSON
+    return res.status === 204 ? null : res.json(); //204 No Content means no body
+  });
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

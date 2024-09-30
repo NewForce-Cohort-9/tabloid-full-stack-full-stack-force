@@ -142,6 +142,25 @@ namespace TabloidFullStack.Repositories
             }
         }
 
+        public void RemoveReaction(PostReaction postReaction)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"DELETE FROM PostReaction 
+                                WHERE PostId = @PostId AND UserProfileId = @UserProfileId AND ReactionId = @ReactionId";
+                    DbUtils.AddParameter(cmd, "@PostId", postReaction.PostId);
+                    DbUtils.AddParameter(cmd, "@UserProfileId", postReaction.UserProfileId);
+                    DbUtils.AddParameter(cmd, "@ReactionId", postReaction.ReactionId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
 
     }
 }

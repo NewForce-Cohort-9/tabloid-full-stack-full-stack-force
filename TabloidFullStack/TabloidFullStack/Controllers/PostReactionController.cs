@@ -34,5 +34,20 @@ namespace TabloidFullStack.Controllers
             var reactions = _postReactionRepository.GetReactionsWithCountForPost(postId);
             return Ok(reactions);
         }
+
+        [HttpDelete("remove")]
+        public IActionResult RemoveReaction([FromBody] PostReaction postReaction)
+        {
+            if (postReaction == null)
+            {
+                return BadRequest();
+            }
+
+            // Logic to remove the reaction
+            _postReactionRepository.RemoveReaction(postReaction);
+            return NoContent();
+        }
+
+
     }
 }
