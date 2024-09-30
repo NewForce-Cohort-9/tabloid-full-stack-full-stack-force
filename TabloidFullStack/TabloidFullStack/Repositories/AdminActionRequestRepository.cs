@@ -81,8 +81,8 @@ namespace TabloidFullStack.Repositories
                             RequestedAt = DbUtils.GetNullableDateTime(reader, "RequestedAt"),
                             ApprovedAt = DbUtils.GetNullableDateTime(reader, "ApprovedAt"),
                             IsCompleted = reader.GetBoolean(reader.GetOrdinal("IsCompleted")),
-                            RequestingAdminName = DbUtils.GetString(reader, "RequestingAdminName"),
-                            ApprovingAdminName = DbUtils.GetString(reader, "ApprovingAdminName"),
+                            //RequestingAdminName = DbUtils.GetString(reader, "RequestingAdminName"),
+                            //ApprovingAdminName = DbUtils.GetString(reader, "ApprovingAdminName"),
                         };
                     }
                     reader.Close();
@@ -131,14 +131,15 @@ namespace TabloidFullStack.Repositories
                     cmd.CommandText = @"
                         UPDATE AdminActionRequest
                         SET 
-                           ApprovingAdminId = @ApprovingAdminId
-                           IsCompleted = 1,
-                           ApprovedAt = @ApprovedAt,
+                           ApprovingAdminId = @ApprovingAdminId,
+                           IsCompleted = @IsCompleted,
+                           ApprovedAt = @ApprovedAt
                         WHERE Id = @RequestId";
 
                     cmd.Parameters.AddWithValue("@RequestId", request.Id);
                     cmd.Parameters.AddWithValue("@ApprovingAdminId", request.ApprovingAdminId);
                     cmd.Parameters.AddWithValue("@ApprovedAt", request.ApprovedAt);
+                    cmd.Parameters.AddWithValue("@IsCompleted", request.IsCompleted);
 
                     cmd.ExecuteNonQuery();
 
