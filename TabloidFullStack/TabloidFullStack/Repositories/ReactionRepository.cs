@@ -20,7 +20,7 @@ namespace TabloidFullStack.Repositories
                     DbUtils.AddParameter(cmd, "@Name", reaction.Name);
                     DbUtils.AddParameter(cmd, "@ImageLocation", reaction.ImageLocation);
 
-                    reaction.Id = (int)cmd.ExecuteScalar(); // Retrieve the new Id
+                    reaction.Id = (int)cmd.ExecuteScalar(); // get new Id
                 }
             }
         }

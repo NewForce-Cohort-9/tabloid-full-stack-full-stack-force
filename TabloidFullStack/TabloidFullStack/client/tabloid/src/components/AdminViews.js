@@ -85,7 +85,7 @@ export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
         <Route path="/profile/edit/:id" element={<UserProfileEdit />} />
 
   
-<Route path="/create-reaction" element={<CreateReaction />} />
+        <Route path="/create-reaction" element={<CreateReaction />} />
       </Route>
     </Routes>
   );

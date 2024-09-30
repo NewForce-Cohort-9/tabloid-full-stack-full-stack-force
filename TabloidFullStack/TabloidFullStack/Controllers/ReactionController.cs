@@ -33,7 +33,7 @@ namespace TabloidFullStack.Controllers
                 return BadRequest("Reaction data is not valid.");
             }
 
-            _reactionRepository.Add(reaction); // No manual Id assignment here
+            _reactionRepository.Add(reaction); 
             return CreatedAtAction(nameof(GetAllReactions), new { id = reaction.Id }, reaction);
         }
 
