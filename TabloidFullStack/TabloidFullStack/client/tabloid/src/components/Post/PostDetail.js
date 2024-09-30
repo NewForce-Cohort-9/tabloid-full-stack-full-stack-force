@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { getPostById, deletePost } from "../../Managers/PostManager"; 
-import { getReactionsForPost } from "../../Managers/PostReactionManager";
+import { getReactionsForPost, addPostReaction, removePostReaction } from "../../Managers/PostReactionManager";
 import { addSubscription } from "../../Managers/SubscriptionManager";
 
 export default function PostDetails() {
@@ -9,6 +9,7 @@ export default function PostDetails() {
   const [post, setPost] = useState(null);
   const navigate = useNavigate();
   const [reactions, setReactions] = useState([]);
+  const [userReaction, setUserReaction] = useState(null); //up, down or null
   const userProfile = JSON.parse(localStorage.getItem('userProfile'));
 
   useEffect(() => {
@@ -16,9 +17,15 @@ export default function PostDetails() {
     fetchReactions(); //reaction
   }, [id]);
 
-  //reaction
   const fetchReactions = () => {
-    getReactionsForPost(id).then(setReactions);
+    getReactionsForPost(id).then((data) => {
+      setReactions(data);
+      //check if the user has already reacted
+      const userReactionRecord = data.find(r => r.userProfileId === userProfile.id);
+      if (userReactionRecord) {
+        setUserReaction(userReactionRecord.reactionId === 1 ? 'up' : 'down'); // 1 is thumbs up and 2 is thumbs down
+      }
+    });
   };
 
   const handleDelete = () => {
@@ -43,6 +50,50 @@ export default function PostDetails() {
         alert("You need to be logged in to subscribe.");
     }
 };
+
+const handleReaction = (reactionType) => {
+  if (!userProfile) {
+    alert("You need to be logged in to react.");
+    return;
+  }
+
+  const reactionId = reactionType === 'up' ? 1 : 2; // 1 is thumbs up and 2 is thumbs down
+
+  // //do nothing if user already reacted with the same reaction
+  // if (userReaction === reactionType) {
+  //   return;
+  // }
+
+   //if user clicks same reaction, remove it (toggle off)
+   if (userReaction === reactionType) {
+    removePostReaction(post.id, userProfile.id, reactionId)
+      .then(() => {
+        setUserReaction(null);
+        //update reaction count 
+        setReactions(prevReactions => 
+          prevReactions.map(r => 
+            r.id === reactionId 
+              ? { ...r, reactionCount: r.reactionCount - 1 } 
+              : r
+          )
+        );
+        fetchReactions(); //refresh reactions after removal
+      })
+      .catch((error) => {
+        console.error("Error removing reaction:", error);
+        alert("Failed to remove reaction.");
+      });
+    return;
+  }
+
+  //handle reaction toggle
+  addPostReaction(post.id, reactionId, userProfile.id)
+    .then(() => {
+      setUserReaction(reactionType);
+      fetchReactions(); //refresh reaction count after adding a new reaction
+    })
+};
+
   if (!post) {
     return <div>Loading...</div>;
   }
@@ -62,22 +113,32 @@ export default function PostDetails() {
       <Link to={`/posts/${id}/comments`} className="btn btn-outline-primary mx-1" title="View Comments">
         View Comments
       </Link>
-      <div>
-                        {reactions.map((reaction) => (
-                            <div key={reaction.id}>
-                                <img
-                                    src={reaction.imageLocation}
-                                    alt={reaction.name}
-                                    style={{ width: '50px', height: '50px', cursor: 'pointer', padding: '10px' }}
-                                />
-                                <span>{reaction.reactionCount}</span> 
-                            </div>
-                        ))}
-                    </div>
+
       {/* Subscribe button */}
       <button className="btn btn-outline-success mx-1" onClick={handleSubscribe}>
         Subscribe to {post.author.displayName}
       </button>
+
+      {/* Reaction */}
+      <div>
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/25/25297.png" 
+                alt="Thumbs Up"
+                onClick={() => handleReaction('up')}
+                style={{ width: '50px', height: '50px', padding: '10px',cursor: 'pointer', opacity: userReaction === 'up' ? 1 : 0.5 }}
+              />
+              <span>{reactions.find(r => r.id === 1)?.reactionCount}</span>
+              
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6Jt4fWTTKq-a3g4LAk1FNBRURO87dt5UDjg&s" 
+                alt="Thumbs Down"
+                onClick={() => handleReaction('down')}
+                style={{ width: '50px', height: '50px', padding: '11px',cursor: 'pointer', opacity: userReaction === 'down' ? 1 : 0.5 }}
+              />
+              <span>{reactions.find(r => r.id === 2)?.reactionCount}</span>
+      </div>
+
     </div>
   );
 }
+
