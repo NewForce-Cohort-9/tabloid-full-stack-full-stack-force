@@ -49,5 +49,20 @@ namespace TabloidFullStack.Controllers
         }
 
 
+
+
+        //create reaction
+        [HttpPost("reaction")]
+        public IActionResult AddReaction([FromBody] Reaction reaction)
+        {
+            if (reaction == null)
+            {
+                return BadRequest("Reaction data is not valid.");
+            }
+
+            _postReactionRepository.AddReaction(reaction);
+            return CreatedAtAction(nameof(GetReactionsForPost), new { postId = reaction.Id }, reaction);
+        }
+
     }
 }
