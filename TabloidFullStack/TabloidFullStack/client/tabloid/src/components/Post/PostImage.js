@@ -16,8 +16,8 @@ export const PostImage = ({postId, onImageUpload}) => {
     console.log(formData);
 
     try {
-        const response = await fetch(`https://localhost:5001/api/Post/upload?Id=${postId}`, {
-            method: "PUT",
+        const response = await fetch(`https://localhost:5001/api/Post/upload?postId=${postId}`, {
+            method: "POST",
             body: formData,
           });
           if(!response.ok) throw new Error("Upload failed");

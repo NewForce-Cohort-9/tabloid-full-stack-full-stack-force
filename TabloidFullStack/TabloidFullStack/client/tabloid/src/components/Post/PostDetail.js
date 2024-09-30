@@ -119,7 +119,7 @@ export default function PostDetails() {
       imageLocation: newImagePath, //update image location
     }));
   };
-console.log(post.imageLocation)
+
   return (
     <div className="container">
       {post.imageLocation ? (
