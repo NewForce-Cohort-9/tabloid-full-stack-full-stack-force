@@ -43,4 +43,34 @@ public class SubscriptionController : ControllerBase
         }
     }
 
+
+    [HttpPost("unsubscribe")]
+    public IActionResult Unsubscribe(int subscriberId, int providerId)
+    {
+        try
+        {
+            _subscriptionRepository.Unsubscribe(subscriberId, providerId);
+            return Ok(new { message = "Unsubscribed successfully" });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("isSubscribed")]
+    public IActionResult IsSubscribed(int subscriberId, int providerId)
+    {
+        try
+        {
+            bool isSubscribed = _subscriptionRepository.IsSubscribed(subscriberId, providerId);
+            return Ok(isSubscribed);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+
 }
