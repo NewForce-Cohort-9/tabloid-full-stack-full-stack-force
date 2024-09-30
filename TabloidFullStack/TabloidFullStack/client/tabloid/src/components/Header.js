@@ -54,8 +54,8 @@ export default function Header({ isLoggedIn, setIsLoggedIn }) {
                   </NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink tag={RRNavLink} to="/unapproved">
-                    Unapproved Posts
+                  <NavLink tag={RRNavLink} to="/approval">
+                    Post Approval
                   </NavLink>
                 </NavItem>
                 <NavItem>

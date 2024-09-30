@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { GetAllCategories } from "../../Managers/CategoryManager";
 import { getAllTags } from "../../Managers/TagManager";
 import { getPostsByCategory, getPostsByTag, GetUnapprovedPosts } from "../../Managers/PostManager";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Post from "./Post";
 
 export const UnauthorizedPostList = () => {
@@ -26,28 +26,10 @@ export const UnauthorizedPostList = () => {
     const posts = await GetUnapprovedPosts();
     setPosts(posts);
   };
-  const postsByCategory = async (id) => {
-    if (id > 0)
-    {
-      const posts = await getPostsByCategory(id);
-      setPosts(posts)
-    }
-    else
-    {
-      callGetPosts()
-    }
-  }
+  const navigate = useNavigate();
 
-  const postsByTag = async (id) => {
-    if (id > 0)
-    {
-      const posts = await getPostsByTag(id);
-      setPosts(posts)
-    }
-    else
-    {
-      callGetPosts()
-    }
+  const handleApproval = () => {
+
   }
   return (
     <>
@@ -84,9 +66,28 @@ export const UnauthorizedPostList = () => {
                 return (
                   <tr key={post.id}>
                     <Post post={post} showActions={false} />
+                    {post.isApproved ? (
+                      <td
+                      className="btn btn-danger"
+                      title="approve"
+                      onClick={() => navigate(`/post/disapprove/${post.id}`)}
+                      >
+                        Disapprove
+                      </td>
+                    ) : (
+                      <td
+                      className="btn btn-success"
+                      title="approve"
+                      onClick={() => navigate(`/post/approve/${post.id}`)}
+                      >
+                        Approve
+                      </td>
+                    )}
                   </tr>
+                  
                 );
               })}
+              
           </tbody>
         </table>
       </div>
