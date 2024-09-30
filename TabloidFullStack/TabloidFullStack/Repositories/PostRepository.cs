@@ -318,6 +318,7 @@ namespace TabloidFullStack.Repositories
                         UPDATE Post
                         SET Title = @Title,
                             Content = @Content,
+                            IsApproved = @isApproved,
                            
                             ImageLocation = @ImageLocation
                         WHERE Id = @Id";
@@ -325,6 +326,7 @@ namespace TabloidFullStack.Repositories
                     cmd.Parameters.AddWithValue("@Id", post.Id);
                     cmd.Parameters.AddWithValue("@Title", post.Title);
                     cmd.Parameters.AddWithValue("@Content", post.Content);
+                    cmd.Parameters.AddWithValue("@isApproved", post.IsApproved);
                     
                     cmd.Parameters.AddWithValue("@ImageLocation", post.ImageLocation);
 
