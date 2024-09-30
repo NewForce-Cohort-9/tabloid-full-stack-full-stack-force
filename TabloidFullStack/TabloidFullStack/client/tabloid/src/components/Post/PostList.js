@@ -23,9 +23,7 @@ export default function PostList() {
   useEffect(() => {
     getAllTags().then((data) => setTags(data));
   }, []);
-  useEffect(() => {
-
-  })
+ 
 
   useEffect(() => {
     callGetPosts();
