@@ -28,6 +28,7 @@ export default function UserProfile() {
       imageLocation: newImagePath, //update image location
     }));
   };
+  console.log(profile.imageLocation)
 
   if (!profile) return <div>Profile doesnt exist.</div>;
   return (

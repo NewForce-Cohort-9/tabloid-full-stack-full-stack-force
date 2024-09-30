@@ -4,6 +4,8 @@ import { getPostById, updatePost } from "../../Managers/PostManager";
 import { GetAllCategories } from "../../Managers/CategoryManager";
 import { getAllTags } from "../../Managers/TagManager";
 import { deletePostTag, getPostTagsByPost } from "../../Managers/PostTagManager";
+import { PostImage } from "./PostImage";
+
 
 export default function EditPostForm() {
   const { postId } = useParams();
@@ -14,7 +16,7 @@ export default function EditPostForm() {
   const [post, setPost] = useState({
     title: "",
     content: "",
-    categoryId: "",
+    categoryId: ""
   });
   const [categories, setCategories] = useState([]);
 
@@ -24,7 +26,8 @@ export default function EditPostForm() {
       setPost({
         title: existingPost.title,
         content: existingPost.content,
-        categoryId: existingPost.category?.id || "",
+        categoryId: existingPost.category?.id,
+        imageLocation: existingPost?.imageLocation || "",
       });
     });
     GetAllCategories().then(setCategories);
@@ -48,7 +51,6 @@ export default function EditPostForm() {
   const confirmDelete = (event) => {
     const confirmAction = window.confirm("Are you sure you want to delete this tag?");
     if (confirmAction) {
-        console.log(event.target.value)
       deletePostTag(event.target.value)
     }
   };
@@ -67,7 +69,7 @@ export default function EditPostForm() {
       id: Number(postId),
       title: post.title,
       content: post.content,
-      imageLocation: "default.jpg",
+      imageLocation: post.imageLocation,
       createDateTime: new Date().toISOString(),
       publishDateTime: new Date().toISOString(),
       isApproved: true,
@@ -97,7 +99,7 @@ export default function EditPostForm() {
     console.log("Updated Post Payload:", updatedPost);
 
     updatePost(updatedPost)
-      .then(() => navigate(`/posts`))
+      .then(() => navigate(`/myposts`))
       .catch((err) => {
         console.error("Failed to update post:", err);
       });
@@ -164,6 +166,7 @@ export default function EditPostForm() {
           );
         })}
       </fieldset>
+      
       <button type="submit">Save Changes</button>
     </form>
   );
