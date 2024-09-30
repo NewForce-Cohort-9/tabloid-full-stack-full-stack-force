@@ -57,7 +57,7 @@ export const handleTwoAdminAction = async (
       action
     );
 
-    if (existingAdminRequest) {
+    if (existingAdminRequest && !existingAdminRequest.isCompleted) {
       const updatedRequest = {
         ...existingAdminRequest,
         isCompleted: true,

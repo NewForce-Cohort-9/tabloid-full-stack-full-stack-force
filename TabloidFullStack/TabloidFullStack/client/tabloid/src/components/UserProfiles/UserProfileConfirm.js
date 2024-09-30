@@ -30,21 +30,26 @@ export default function UserProfileConfirm({ currentUserId }) {
   };
 
   const performAccountActionRedirect = async () => {
-    if (isDeactivating && (await isAdminProtection())) {
+    const gotAdminProtected = await isAdminProtection();
+    let doProceedWithDeactivate = isDeactivating;
+
+    if (isDeactivating && gotAdminProtected) {
       return;
     }
 
-    const doubleAdminRes = await handleTwoAdminAction(
-      profileId,
-      currentUserId,
-      ADMIN_ACTION_TYPES.Deactivate
-    );
+    if (isDeactivating && !gotAdminProtected) {
+      const { message, doUpdate } = await handleTwoAdminAction(
+        profileId,
+        currentUserId,
+        ADMIN_ACTION_TYPES.Deactivate
+      );
 
-    if ("message" in doubleAdminRes) {
-      window.alert(doubleAdminRes.message);
+      if (message) window.alert(message);
+
+      doProceedWithDeactivate = isDeactivating && doUpdate;
     }
 
-    updateProfile({ ...profile, isDeactivated: isDeactivating });
+    updateProfile({ ...profile, isDeactivated: doProceedWithDeactivate });
     navigate("/profiles");
   };
 
