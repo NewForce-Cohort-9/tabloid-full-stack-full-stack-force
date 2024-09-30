@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { addReaction, getAllReactions } from '../../Managers/ReactionManager';
 
-export default function AddReaction({ onReactionAdded }) {
+export default function CreateReaction({ onReactionAdded }) {
     const [name, setName] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [reactions, setReactions] = useState([]);

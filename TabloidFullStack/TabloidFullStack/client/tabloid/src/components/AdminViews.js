@@ -22,7 +22,7 @@ import UserProfileConfirm from "./UserProfiles/UserProfileConfirm";
 import UserProfileEdit from "./UserProfiles/UserProfileEdit.js";
 import EditPostForm from "./Post/EditPostForm.js";
 import  HomePage  from "./Homepage.js";
-import AddReaction from "./Reaction/AddReaction.js";
+import CreateReaction from "./Reaction/CreateReaction.js";
 import { UnauthorizedPostList } from "./Post/PostApproval.js";
 import { PostApprovalConfirm } from "./Post/PostConfirm.js";
 
@@ -82,7 +82,7 @@ export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
         <Route path="/post/disapprove/:id" element={<PostApprovalConfirm />}/>
         <Route path="/profile/edit/:id" element={<UserProfileEdit />} />
 
-        <Route path="/reactions" element={<AddReaction />} />
+        <Route path="/reactions" element={<CreateReaction />} />
       </Route>
     </Routes>
   );

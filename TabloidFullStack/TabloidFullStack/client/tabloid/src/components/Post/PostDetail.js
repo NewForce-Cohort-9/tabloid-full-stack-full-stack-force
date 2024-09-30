@@ -156,7 +156,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { getReactionsByPostId, addPostReaction, removePostReaction } from '../../Managers/ReactionManager';
-import AddReaction from '../Reaction/AddReaction';
+import CreateReaction from '../Reaction/CreateReaction';
 
 export default function PostDetails({ postId, userProfile }) {
     const [reactions, setReactions] = useState([]);
@@ -214,8 +214,8 @@ export default function PostDetails({ postId, userProfile }) {
                 ))}
             </div>
 
-             {/* AddReaction component - passing the fetchReactions function */}
-             <AddReaction onReactionAdded={fetchReactions} />
+             {/* CreateReaction component - passing the fetchReactions function */}
+             <CreateReaction onReactionAdded={fetchReactions} />
         </div>
     );
 }
