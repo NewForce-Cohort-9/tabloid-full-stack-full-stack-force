@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { GetAllCategories } from "../../Managers/CategoryManager";
 import { getAllTags } from "../../Managers/TagManager";
-import { getPostsByCategory, getPostsByTag, GetUnapprovedPosts } from "../../Managers/PostManager";
+import {
+  GetApprovedPosts,
+  getPostsByCategory,
+  getPostsByTag,
+  GetUnapprovedPosts,
+} from "../../Managers/PostManager";
 import { Link, useNavigate } from "react-router-dom";
 import Post from "./Post";
 
@@ -9,6 +14,9 @@ export const UnauthorizedPostList = () => {
   const [posts, setPosts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
+  const [approve, setApprove] = useState();
+
+  let seeApprovedPost = approve;
 
   useEffect(() => {
     GetAllCategories().then((data) => setCategories(data));
@@ -20,16 +28,20 @@ export const UnauthorizedPostList = () => {
   }, []);
 
   useEffect(() => {
-    callGetPosts()
-  },[]);
+    callGetPosts();
+  }, []);
   const callGetPosts = async () => {
     const posts = await GetUnapprovedPosts();
     setPosts(posts);
   };
   const navigate = useNavigate();
-
-  const handleApproval = () => {
-
+  const approvedPosts = () => {
+    setApprove(true);
+      GetApprovedPosts().then((data) => setPosts(data));
+  };
+  const unapprovedPosts = () => {
+    setApprove(false);
+    GetUnapprovedPosts().then((data) => setPosts(data))
   }
   return (
     <>
@@ -45,7 +57,21 @@ export const UnauthorizedPostList = () => {
 
       <div className="container pt-5">
         <div className="container d-flex align-items-center justify-content-between w-full">
-          <h1>Posts Pending Approval</h1>
+          {seeApprovedPost ? (
+            <div>
+              <h1>Approved Posts</h1>{" "}
+              <button className="btn btn-outline-primary" onClick={unapprovedPosts}>
+                See pending Posts
+              </button>{" "}
+            </div>
+          ) : (
+            <div>
+              <h1>Posts Pending Approval</h1>{" "}
+              <button className="btn btn-outline-primary" onClick={approvedPosts}>
+                See approved Posts
+              </button>{" "}
+            </div>
+          )}
         </div>
         <table className="table table-striped">
           <thead>
@@ -62,32 +88,30 @@ export const UnauthorizedPostList = () => {
             {posts &&
               posts.length > 0 &&
               posts.map((post) => {
-                console.log(post.isApproved)
+                console.log(seeApprovedPost);
                 return (
                   <tr key={post.id}>
                     <Post post={post} showActions={false} />
                     {post.isApproved ? (
                       <td
-                      className="btn btn-danger"
-                      title="approve"
-                      onClick={() => navigate(`/post/disapprove/${post.id}`)}
+                        className="btn btn-danger"
+                        title="approve"
+                        onClick={() => navigate(`/post/disapprove/${post.id}`)}
                       >
                         Disapprove
                       </td>
                     ) : (
                       <td
-                      className="btn btn-success"
-                      title="approve"
-                      onClick={() => navigate(`/post/approve/${post.id}`)}
+                        className="btn btn-success"
+                        title="approve"
+                        onClick={() => navigate(`/post/approve/${post.id}`)}
                       >
                         Approve
                       </td>
                     )}
                   </tr>
-                  
                 );
               })}
-              
           </tbody>
         </table>
       </div>
