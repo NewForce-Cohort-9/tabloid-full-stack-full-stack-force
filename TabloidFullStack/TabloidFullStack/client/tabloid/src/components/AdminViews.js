@@ -22,7 +22,8 @@ import UserProfileConfirm from "./UserProfiles/UserProfileConfirm";
 import UserProfileEdit from "./UserProfiles/UserProfileEdit.js";
 import EditPostForm from "./Post/EditPostForm.js";
 import  HomePage  from "./Homepage.js";
-import { UnauthorizedPostList } from "./Post/UnapprovedPostList.js";
+import { UnauthorizedPostList } from "./Post/PostApproval.js";
+import { PostApprovalConfirm } from "./Post/PostConfirm.js";
 
 export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
   return (
@@ -56,7 +57,7 @@ export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
         <Route path="/posts/edit/:postId" element={<EditPostForm />} />
         <Route path="/posts/:postId/comments" element={<CommentList />} />
         <Route path="/posts/:postId/comments/add" element={<CommentForm />} />
-        <Route path="/unapproved" element={<UnauthorizedPostList />}/>
+        <Route path="/approval" element={<UnauthorizedPostList />}/>
         <Route
           path="/posts/:postId/comments/delete/:commentId"
           element={<DeleteComment />}
@@ -76,6 +77,8 @@ export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
           path="/profile/reactivate/:id"
           element={<UserProfileConfirm />}
         />
+        <Route path="/post/approve/:id" element={<PostApprovalConfirm />}/>
+        <Route path="/post/disapprove/:id" element={<PostApprovalConfirm />}/>
         <Route path="/profile/edit/:id" element={<UserProfileEdit />} />
       </Route>
     </Routes>

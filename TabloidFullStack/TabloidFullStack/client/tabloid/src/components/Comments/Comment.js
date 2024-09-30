@@ -2,7 +2,7 @@ import React from "react";
 import { EditPencil, TrashcanDelete } from "../Icons";
 import { Link } from "react-router-dom";
 
-export default function Comment({ comment, postId }) { //accept postId as a prop for delete
+export default function Comment({ comment, postId }) { //accept postId as a prop for delete + edit
   return (
     <>
       <td>{comment.subject}</td>
