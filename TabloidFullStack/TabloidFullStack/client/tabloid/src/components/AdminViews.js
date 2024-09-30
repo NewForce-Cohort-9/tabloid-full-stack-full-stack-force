@@ -22,6 +22,7 @@ import UserProfileConfirm from "./UserProfiles/UserProfileConfirm";
 import UserProfileEdit from "./UserProfiles/UserProfileEdit.js";
 import EditPostForm from "./Post/EditPostForm.js";
 import  HomePage  from "./Homepage.js";
+import AddReaction from "./Reaction/AddReaction.js";
 
 export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
   return (
@@ -75,6 +76,8 @@ export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
           element={<UserProfileConfirm />}
         />
         <Route path="/profile/edit/:id" element={<UserProfileEdit />} />
+
+        <Route path="/reactions" element={<AddReaction />} />
       </Route>
     </Routes>
   );
