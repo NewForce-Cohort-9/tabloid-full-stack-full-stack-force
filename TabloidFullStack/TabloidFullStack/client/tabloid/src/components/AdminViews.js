@@ -80,7 +80,10 @@ export default function AdminViews(session, setIsLoggedIn) {
         />
         <Route path="/post/approve/:id" element={<PostApprovalConfirm />} />
         <Route path="/post/disapprove/:id" element={<PostApprovalConfirm />} />
-        <Route path="/profile/edit/:id" element={<UserProfileEdit />} />
+        <Route
+          path="/profile/edit/:id"
+          element={<UserProfileEdit currentUserId={session.currentUser.id} />}
+        />
       </Route>
     </Routes>
   );

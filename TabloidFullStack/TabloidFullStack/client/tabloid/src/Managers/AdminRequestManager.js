@@ -71,7 +71,7 @@ export const handleTwoAdminAction = async (
 
       await approveAdminRequest(updatedRequest);
 
-      return { message: "Approved admin action" };
+      return { message: "Approved admin action", didUpdate: true };
     } else {
       const newRequest = {
         targetUserId: userProfileId,
@@ -87,9 +87,10 @@ export const handleTwoAdminAction = async (
 
       return {
         message: "Request sent and will wait for another admin to approve.",
+        didUpdate: false,
       };
     }
   } catch (error) {
-    return { error: error };
+    return null;
   }
 };

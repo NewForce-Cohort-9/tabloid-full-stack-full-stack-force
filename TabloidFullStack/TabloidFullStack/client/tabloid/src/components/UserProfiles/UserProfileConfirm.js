@@ -38,15 +38,15 @@ export default function UserProfileConfirm({ currentUserId }) {
     }
 
     if (isDeactivating && !gotAdminProtected) {
-      const { message, doUpdate } = await handleTwoAdminAction(
+      const action = await handleTwoAdminAction(
         profileId,
         currentUserId,
         ADMIN_ACTION_TYPES.Deactivate
       );
 
-      if (message) window.alert(message);
+      if (action?.message) window.alert(action.message);
 
-      doProceedWithDeactivate = isDeactivating && doUpdate;
+      doProceedWithDeactivate = isDeactivating && action?.didUpdate;
     }
 
     updateProfile({ ...profile, isDeactivated: doProceedWithDeactivate });

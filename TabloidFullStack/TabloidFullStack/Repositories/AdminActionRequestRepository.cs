@@ -61,7 +61,7 @@ namespace TabloidFullStack.Repositories
                         FROM AdminActionRequest ar
                         LEFT JOIN UserProfile ra ON ar.RequestingAdminId = ra.Id 
                         LEFT JOIN UserProfile aa ON ar.ApprovingAdminId = aa.Id 
-                        WHERE ar.TargetUserId = @TargetUserId AND ActionType = @ActionType";
+                        WHERE ar.TargetUserId = @TargetUserId AND ActionType = @ActionType AND ar.IsCompleted = 0";
 
                     cmd.Parameters.AddWithValue("@TargetUserId", targetUserId);
                     cmd.Parameters.AddWithValue("@ActionType", actionType);
