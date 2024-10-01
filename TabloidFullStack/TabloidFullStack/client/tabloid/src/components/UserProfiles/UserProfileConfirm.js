@@ -37,7 +37,11 @@ export default function UserProfileConfirm({ currentUserId }) {
       return;
     }
 
-    if (isDeactivating && !gotAdminProtected) {
+    if (
+      isDeactivating &&
+      !gotAdminProtected &&
+      profile.userType.name === "Admin"
+    ) {
       const action = await handleTwoAdminAction(
         profileId,
         currentUserId,

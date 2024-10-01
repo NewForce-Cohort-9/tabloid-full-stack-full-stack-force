@@ -53,14 +53,16 @@ export default function UserProfileEdit({ currentUserId }) {
       return;
     }
 
-    const action = await handleTwoAdminAction(
-      profileId,
-      currentUserId,
-      ADMIN_ACTION_TYPES.UserType
-    );
+    if (profile.userType.name === "Admin") {
+      const action = await handleTwoAdminAction(
+        profileId,
+        currentUserId,
+        ADMIN_ACTION_TYPES.UserType
+      );
 
-    if (action && action.message) window.alert(action.message);
-    if (action && !action.didUpdate) return;
+      if (action && action.message) window.alert(action.message);
+      if (action && !action.didUpdate) return;
+    }
 
     await updateProfile({ ...profile, userTypeId: selection.id });
     navigate("/profiles");
