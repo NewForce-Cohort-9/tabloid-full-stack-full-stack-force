@@ -21,26 +21,23 @@ import Header from "./Header";
 import UserProfileConfirm from "./UserProfiles/UserProfileConfirm";
 import UserProfileEdit from "./UserProfiles/UserProfileEdit.js";
 import EditPostForm from "./Post/EditPostForm.js";
-import  HomePage  from "./Homepage.js";
+import HomePage from "./Homepage.js";
 import CreateReaction from "./Reaction/CreateReaction.js";
 import { UnauthorizedPostList } from "./Post/PostApproval.js";
 import { PostApprovalConfirm } from "./Post/PostConfirm.js";
 
-
-
-export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
+export default function AdminViews(session, setIsLoggedIn) {
   return (
     <Routes>
       <Route
         path="/"
         element={
           <>
-            <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+            <Header isLoggedIn={session} setIsLoggedIn={setIsLoggedIn} />
             <Outlet />
           </>
         }
       >
-
         <Route path="/" element={<HomePage />} />
         <Route path="/" element={<Hello />} />
         <Route path="/tags" element={<TagList />} />
@@ -60,7 +57,7 @@ export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
         <Route path="/posts/edit/:postId" element={<EditPostForm />} />
         <Route path="/posts/:postId/comments" element={<CommentList />} />
         <Route path="/posts/:postId/comments/add" element={<CommentForm />} />
-        <Route path="/approval" element={<UnauthorizedPostList />}/>
+        <Route path="/approval" element={<UnauthorizedPostList />} />
         <Route
           path="/posts/:postId/comments/delete/:commentId"
           element={<DeleteComment />}
@@ -74,17 +71,24 @@ export default function ApplicationViews(isLoggedIn, setIsLoggedIn) {
         <Route path="/profile/:id" element={<UserProfile />} />
         <Route
           path="/profile/deactivate/:id"
-          element={<UserProfileConfirm />}
+          element={
+            <UserProfileConfirm currentUserId={session.currentUser.id} />
+          }
         />
         <Route
           path="/profile/reactivate/:id"
           element={<UserProfileConfirm />}
         />
-        <Route path="/post/approve/:id" element={<PostApprovalConfirm />}/>
-        <Route path="/post/disapprove/:id" element={<PostApprovalConfirm />}/>
+        <Route path="/post/approve/:id" element={<PostApprovalConfirm />} />
+        <Route path="/post/disapprove/:id" element={<PostApprovalConfirm />} />
+        <Route
+          path="/profile/edit/:id"
+          element={<UserProfileEdit currentUserId={session.currentUser.id} />}
+        />
+        <Route path="/post/approve/:id" element={<PostApprovalConfirm />} />
+        <Route path="/post/disapprove/:id" element={<PostApprovalConfirm />} />
         <Route path="/profile/edit/:id" element={<UserProfileEdit />} />
 
-  
         <Route path="/create-reaction" element={<CreateReaction />} />
       </Route>
     </Routes>

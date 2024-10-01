@@ -19,6 +19,7 @@ namespace TabloidFullStack
             builder.Services.AddTransient<IReactionRepository, ReactionRepository>();
             builder.Services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
             builder.Services.AddTransient<IPostTagRepository, PostTagRepository>();
+            builder.Services.AddTransient<IAdminActionRequestRepository, AdminActionRequestRepository>();
 
 
             builder.Services.AddEndpointsApiExplorer();

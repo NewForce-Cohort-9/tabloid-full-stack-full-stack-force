@@ -5,8 +5,13 @@ import {
   updateProfile,
   getAllProfiles,
 } from "../../Managers/UserProfileManager";
+import {
+  getRequestByTargetUserAndAction,
+  handleTwoAdminAction,
+  ADMIN_ACTION_TYPES,
+} from "../../Managers/AdminRequestManager";
 
-export default function UserProfileConfirm() {
+export default function UserProfileConfirm({ currentUserId }) {
   const [profile, setProfile] = useState(null);
 
   const { id: profileId } = useParams();
@@ -20,15 +25,35 @@ export default function UserProfileConfirm() {
 
   const callGetProfile = async () => {
     const profile = await getByProfileId(profileId);
+
     setProfile(profile);
   };
 
-  const performAccountActionRedirect = async (isDeactivated) => {
-    if (isDeactivated && (await isAdminProtection())) {
+  const performAccountActionRedirect = async () => {
+    const gotAdminProtected = await isAdminProtection();
+    let doProceedWithDeactivate = isDeactivating;
+
+    if (isDeactivating && gotAdminProtected) {
       return;
     }
 
-    updateProfile({ ...profile, isDeactivated });
+    if (
+      isDeactivating &&
+      !gotAdminProtected &&
+      profile.userType.name === "Admin"
+    ) {
+      const action = await handleTwoAdminAction(
+        profileId,
+        currentUserId,
+        ADMIN_ACTION_TYPES.Deactivate
+      );
+
+      if (action?.message) window.alert(action.message);
+
+      doProceedWithDeactivate = isDeactivating && action?.didUpdate;
+    }
+
+    updateProfile({ ...profile, isDeactivated: doProceedWithDeactivate });
     navigate("/profiles");
   };
 
@@ -81,14 +106,14 @@ export default function UserProfileConfirm() {
         </Link>
         {isDeactivating ? (
           <button
-            onClick={() => performAccountActionRedirect(true)}
+            onClick={performAccountActionRedirect}
             className="btn btn-danger"
           >
             Deactivate
           </button>
         ) : (
           <button
-            onClick={() => performAccountActionRedirect(false)}
+            onClick={performAccountActionRedirect}
             className="btn btn-success"
           >
             Reactivate

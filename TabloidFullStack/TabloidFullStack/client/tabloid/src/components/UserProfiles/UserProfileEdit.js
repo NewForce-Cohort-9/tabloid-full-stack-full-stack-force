@@ -6,8 +6,12 @@ import {
   getAllProfiles,
 } from "../../Managers/UserProfileManager";
 import TagPageHeader from "../Tags/TagPageHeader";
+import {
+  handleTwoAdminAction,
+  ADMIN_ACTION_TYPES,
+} from "../../Managers/AdminRequestManager";
 
-export default function UserProfileEdit() {
+export default function UserProfileEdit({ currentUserId }) {
   const [profile, setProfile] = useState(null);
   const [userTypeOptions, setUserTypeOptions] = useState([
     {
@@ -40,12 +44,24 @@ export default function UserProfileEdit() {
   const handleSave = async (e) => {
     e.preventDefault();
     const selection = userTypeOptions.find((item) => item.selected);
+    const gotAdminProtected = await isAdminProtection();
 
-    if (await isAdminProtection()) {
+    if (gotAdminProtected) {
       window.alert(
         "Make someone else an admin before changing this user profile."
       );
       return;
+    }
+
+    if (profile.userType.name === "Admin") {
+      const action = await handleTwoAdminAction(
+        profileId,
+        currentUserId,
+        ADMIN_ACTION_TYPES.UserType
+      );
+
+      if (action && action.message) window.alert(action.message);
+      if (action && !action.didUpdate) return;
     }
 
     await updateProfile({ ...profile, userTypeId: selection.id });
