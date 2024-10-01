@@ -14,32 +14,43 @@ public class SubscriptionRepository : BaseRepository, ISubscriptionRepository
             conn.Open();
             using (var cmd = conn.CreateCommand())
             {
-                // Check if the subscription already exists
+                // Check if an existing subscription with EndDateTime exists
                 cmd.CommandText = @"
-                SELECT COUNT(*)
-                FROM Subscription
+                SELECT Id FROM Subscription 
                 WHERE SubscriberUserProfileId = @SubscriberUserProfileId
-                AND ProviderUserProfileId = @ProviderUserProfileId";
+                AND ProviderUserProfileId = @ProviderUserProfileId
+                AND EndDateTime IS NOT NULL";
 
                 cmd.Parameters.AddWithValue("@SubscriberUserProfileId", subscriberId);
                 cmd.Parameters.AddWithValue("@ProviderUserProfileId", providerId);
 
-                var existingSubscriptionCount = (int)cmd.ExecuteScalar();
-
-                if (existingSubscriptionCount > 0)
+                var reader = cmd.ExecuteReader();
+                if (reader.Read())
                 {
-                    // Subscription already exists, so don't insert it again
-                    throw new Exception("Subscription already exists.");
+                    reader.Close();
+                    using (var updateCmd = conn.CreateCommand())
+                    {
+                        updateCmd.CommandText = @"
+                        UPDATE Subscription 
+                        SET EndDateTime = NULL 
+                        WHERE SubscriberUserProfileId = @SubscriberUserProfileId
+                        AND ProviderUserProfileId = @ProviderUserProfileId";
+
+                        updateCmd.Parameters.AddWithValue("@SubscriberUserProfileId", subscriberId);
+                        updateCmd.Parameters.AddWithValue("@ProviderUserProfileId", providerId);
+                        updateCmd.ExecuteNonQuery();
+                    }
                 }
-
-                // If no subscription exists, insert the new one
-                cmd.CommandText = @"
-                INSERT INTO Subscription (SubscriberUserProfileId, ProviderUserProfileId, BeginDateTime)
-                VALUES (@SubscriberUserProfileId, @ProviderUserProfileId, @BeginDateTime)";
-
-                cmd.Parameters.AddWithValue("@BeginDateTime", DateTime.Now);
-
-                cmd.ExecuteNonQuery();
+                else
+                {
+                    reader.Close();
+                    // No existing subscription, create a new one
+                    cmd.CommandText = @"
+                    INSERT INTO Subscription (SubscriberUserProfileId, ProviderUserProfileId, BeginDateTime)
+                    VALUES (@SubscriberUserProfileId, @ProviderUserProfileId, @BeginDateTime)";
+                    cmd.Parameters.AddWithValue("@BeginDateTime", DateTime.Now);
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
     }
@@ -51,12 +62,12 @@ public class SubscriptionRepository : BaseRepository, ISubscriptionRepository
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = @"
-                SELECT p.Id, p.Title, p.Content, p.ImageLocation, p.CreateDateTime, p.PublishDateTime, p.IsApproved,
-                       p.CategoryId, p.UserProfileId, u.DisplayName AS AuthorDisplayName
+                SELECT p.Id, p.Title, p.Content, p.ImageLocation, p.CreateDateTime, p.PublishDateTime, p.IsApproved, p.CategoryId, u.DisplayName AS AuthorDisplayName
                 FROM Post p
-                JOIN Subscription s ON p.UserProfileId = s.ProviderUserProfileId
                 JOIN UserProfile u ON p.UserProfileId = u.Id
-                WHERE s.SubscriberUserProfileId = @subscriberId";
+                JOIN Subscription s ON u.Id = s.ProviderUserProfileId
+                WHERE s.SubscriberUserProfileId = @subscriberId
+                AND s.EndDateTime IS NULL";
 
                 cmd.Parameters.AddWithValue("@subscriberId", subscriberId);
 
@@ -70,12 +81,11 @@ public class SubscriptionRepository : BaseRepository, ISubscriptionRepository
                         Id = reader.GetInt32(reader.GetOrdinal("Id")),
                         Title = reader.GetString(reader.GetOrdinal("Title")),
                         Content = reader.GetString(reader.GetOrdinal("Content")),
-                        ImageLocation = reader.IsDBNull(reader.GetOrdinal("ImageLocation")) ? null : reader.GetString(reader.GetOrdinal("ImageLocation")),
+                        ImageLocation = !reader.IsDBNull(reader.GetOrdinal("ImageLocation")) ? reader.GetString(reader.GetOrdinal("ImageLocation")) : null,
                         CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
-                        PublishDateTime = reader.IsDBNull(reader.GetOrdinal("PublishDateTime")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
+                        PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
                         IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
                         CategoryId = reader.GetInt32(reader.GetOrdinal("CategoryId")),
-                        UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
                         Author = new UserProfile
                         {
                             DisplayName = reader.GetString(reader.GetOrdinal("AuthorDisplayName"))
@@ -91,4 +101,52 @@ public class SubscriptionRepository : BaseRepository, ISubscriptionRepository
         }
     }
 
+    public void Unsubscribe(int subscriberId, int providerId)
+    {
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = @"
+                    UPDATE Subscription
+                    SET EndDateTime = @EndDateTime
+                    WHERE SubscriberUserProfileId = @SubscriberUserProfileId 
+                    AND ProviderUserProfileId = @ProviderUserProfileId
+                    AND EndDateTime IS NULL"; 
+
+                cmd.Parameters.AddWithValue("@SubscriberUserProfileId", subscriberId);
+                cmd.Parameters.AddWithValue("@ProviderUserProfileId", providerId);
+                cmd.Parameters.AddWithValue("@EndDateTime", DateTime.Now);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+    }
+    public bool IsSubscribed(int subscriberId, int providerId)
+    {
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = @"
+                SELECT COUNT(*)
+                FROM Subscription
+                WHERE SubscriberUserProfileId = @SubscriberUserProfileId 
+                AND ProviderUserProfileId = @ProviderUserProfileId
+                AND EndDateTime IS NULL"; 
+
+                cmd.Parameters.AddWithValue("@SubscriberUserProfileId", subscriberId);
+                cmd.Parameters.AddWithValue("@ProviderUserProfileId", providerId);
+
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
+        }
+    }
+
+
+
 }
+

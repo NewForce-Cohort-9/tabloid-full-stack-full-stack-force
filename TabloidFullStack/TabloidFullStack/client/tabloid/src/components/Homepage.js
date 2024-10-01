@@ -7,12 +7,14 @@ const HomePage = () => {
 
   useEffect(() => {
     if (userProfile) {
-      getPostsBySubscribedAuthors(userProfile.id).then(setPosts).catch(err => console.error(err));
+      getPostsBySubscribedAuthors(userProfile.id)
+        .then((data) => setPosts(data))
+        .catch((err) => console.error("Failed to fetch posts", err));
     }
   }, [userProfile]);
 
   if (!posts.length) {
-    return <p>No posts from your subscriptions yet.</p>;
+    return <p>No posts from your active subscriptions yet.</p>;
   }
 
   return (

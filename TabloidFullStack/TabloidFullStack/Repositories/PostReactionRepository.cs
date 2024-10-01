@@ -162,5 +162,23 @@ namespace TabloidFullStack.Repositories
 
 
 
+
+        //create Reaction
+        public void AddReaction(Reaction reaction)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO Reaction (Name, ImageLocation) VALUES (@Name, @ImageLocation)";
+                    DbUtils.AddParameter(cmd, "@Name", reaction.Name);
+                    DbUtils.AddParameter(cmd, "@ImageLocation", reaction.ImageLocation);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
     }
 }

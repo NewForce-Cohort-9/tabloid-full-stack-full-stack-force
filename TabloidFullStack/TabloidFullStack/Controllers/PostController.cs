@@ -96,7 +96,7 @@ namespace TabloidFullStack.Controllers
 
             return NoContent();
         }
-        [HttpPut("upload")]
+        [HttpPost("upload")]
         public IActionResult UploadPostImage(IFormFile file, int postId)
         {
             if(file == null || file.Length == 0)

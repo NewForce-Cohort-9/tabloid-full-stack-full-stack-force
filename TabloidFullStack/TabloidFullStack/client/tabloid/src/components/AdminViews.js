@@ -22,6 +22,7 @@ import UserProfileConfirm from "./UserProfiles/UserProfileConfirm";
 import UserProfileEdit from "./UserProfiles/UserProfileEdit.js";
 import EditPostForm from "./Post/EditPostForm.js";
 import HomePage from "./Homepage.js";
+import CreateReaction from "./Reaction/CreateReaction.js";
 import { UnauthorizedPostList } from "./Post/PostApproval.js";
 import { PostApprovalConfirm } from "./Post/PostConfirm.js";
 
@@ -84,6 +85,11 @@ export default function AdminViews(session, setIsLoggedIn) {
           path="/profile/edit/:id"
           element={<UserProfileEdit currentUserId={session.currentUser.id} />}
         />
+        <Route path="/post/approve/:id" element={<PostApprovalConfirm />} />
+        <Route path="/post/disapprove/:id" element={<PostApprovalConfirm />} />
+        <Route path="/profile/edit/:id" element={<UserProfileEdit />} />
+
+        <Route path="/create-reaction" element={<CreateReaction />} />
       </Route>
     </Routes>
   );
